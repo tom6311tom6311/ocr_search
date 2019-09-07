@@ -1,0 +1,23 @@
+{
+  "name": "ocr_search",
+  "version": "1.0.0",
+  "description": "The node application for extracting information from documents using OCR and providing text-based search interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tom6311tom6311/ocr_search.git"
+  },
+  "keywords": [
+    "ocr",
+    "search"
+  ],
+  "author": "tom6311tom6311",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tom6311tom6311/ocr_search/issues"
+  },
+  "homepage": "https://github.com/tom6311tom6311/ocr_search#readme"
+}
