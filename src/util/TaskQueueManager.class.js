@@ -41,7 +41,7 @@ class TaskQueueManager {
       if (this.taskQueue.isEmpty()) return;
       const taskTimeoutIdxStr = Object
         .keys(this.taskTimeouts)
-        .find(idxStr => this.taskTimeouts[idxStr] === -1);
+        .find((idxStr) => this.taskTimeouts[idxStr] === -1);
       if (taskTimeoutIdxStr === undefined) return;
 
       const { job, failCallback, params } = this.taskQueue.dequeue();

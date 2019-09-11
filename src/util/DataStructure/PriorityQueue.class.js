@@ -44,19 +44,19 @@ class PriorityQueue {
   }
 
   findIndex(condition) {
-    return this.items.map(e => e.item).findIndex(condition);
+    return this.items.map((e) => e.item).findIndex(condition);
   }
 
   forEach(func) {
-    return this.items.map(e => e.item).forEach(func);
+    return this.items.map((e) => e.item).forEach(func);
   }
 
   map(condition) {
-    return this.items.map(e => e.item).map(condition);
+    return this.items.map((e) => e.item).map(condition);
   }
 
   filter(condition) {
-    return this.items.map(e => e.item).filter(condition);
+    return this.items.map((e) => e.item).filter(condition);
   }
 
   update(idx, newItem, priority) {
@@ -65,7 +65,7 @@ class PriorityQueue {
   }
 
   updateAll(params) {
-    this.items = this.items.map(element => ({
+    this.items = this.items.map((element) => ({
       ...element,
       item: {
         ...element.item,
