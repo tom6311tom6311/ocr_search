@@ -4,6 +4,9 @@
   "description": "The node application for extracting information from documents using OCR and providing text-based search interface",
   "main": "index.js",
   "scripts": {
+    "start": "./node_modules/.bin/babel-node index.js",
+    "ppt2pdf": "./node_modules/.bin/babel-node src/ppt2pdf.script.js",
+    "pdf2png": "./node_modules/.bin/babel-node src/pdf2png.script.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +22,19 @@
   "bugs": {
     "url": "https://github.com/tom6311tom6311/ocr_search/issues"
   },
-  "homepage": "https://github.com/tom6311tom6311/ocr_search#readme"
+  "homepage": "https://github.com/tom6311tom6311/ocr_search#readme",
+  "dependencies": {
+    "i": "^0.3.6",
+    "npm": "^6.11.3",
+    "office-to-pdf": "^4.0.0",
+    "pdf2pic": "^1.3.9",
+    "ppt-png": "^0.5.3",
+    "progress": "^2.0.3",
+    "rimraf": "^3.0.0",
+    "tesseract.js": "^2.0.0-alpha.15"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0"
+  }
 }
