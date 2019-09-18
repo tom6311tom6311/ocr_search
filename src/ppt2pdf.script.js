@@ -12,7 +12,6 @@ const PDF_DIR = `${DATA_DIR}/pdf`;
 console.log('INFO [ppt2pdf]: listing ppt files...');
 const pptFileList = listDirRec(PPT_DIR).filter((f) => f.toLowerCase().endsWith('ppt') || f.toLowerCase().endsWith('pptx'));
 
-// console.log(pptFileList);
 const progressBar = new ProgressBar('INFO [ppt2pdf]: converting to pdf [:bar] :percent', {
   complete: '=',
   incomplete: ' ',

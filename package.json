@@ -2,13 +2,14 @@
   "name": "ocr_search",
   "version": "1.0.0",
   "description": "A node application for extracting text from documents and images using OCR and providing text-based search API",
-  "main": "index.js",
+  "main": "src/runserver.script.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node index.js",
+    "start": "./node_modules/.bin/babel-node src/runserver.script.js",
     "ppt2pdf": "./node_modules/.bin/babel-node src/ppt2pdf.script.js",
     "pdf2png": "./node_modules/.bin/babel-node src/pdf2png.script.js",
     "ocr": "./node_modules/.bin/babel-node src/ocr.script.js",
     "lint": "eslint \"**/*.js\"",
+    "clean": "rm -rf data/png;",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,7 +30,10 @@
   },
   "homepage": "https://github.com/tom6311tom6311/ocr_search#readme",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "express": "^4.17.1",
     "i": "^0.3.6",
+    "leven": "^3.1.0",
     "npm": "^6.11.3",
     "office-to-pdf": "^4.0.0",
     "pdf2pic": "^1.3.9",
