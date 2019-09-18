@@ -1,3 +1,4 @@
+import express from 'express';
 import TermMatcher from '../TermMatcher/TermMatcher.class';
 
 const ApiHandler = [
@@ -15,6 +16,13 @@ const ApiHandler = [
           });
         }
       },
+    ],
+  },
+  {
+    method: 'use',
+    path: '/pageImg',
+    handlers: [
+      express.static('data/png'),
     ],
   },
 ];
