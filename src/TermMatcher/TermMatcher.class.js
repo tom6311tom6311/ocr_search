@@ -1,7 +1,7 @@
 import leven from 'leven';
 import randomChoice from '../util/randomChoice.func';
 
-const similarity = (term1, term2) => 1 - (leven(term1, term2) / Math.max(term1.length, term2.length));
+const similarity = (term1, term2) => Math.max(term1.length, term2.length) - leven(term1, term2);
 
 class TermMatcher {
   constructor() {
@@ -16,11 +16,12 @@ class TermMatcher {
       const { pages } = ocrData[fileName];
       pages.forEach((page) => {
         if (!page) return;
-        const { imgPath, joinedTerm: term } = page;
+        const { pageIdx, imgPath, joinedTerm: term } = page;
         this.termLib.push({
           term,
           params: {
             fileName,
+            pageIdx,
             imgPath,
           },
         });
@@ -32,13 +33,13 @@ class TermMatcher {
     if (this.termLib === null || this.termLib.length === 0) return [];
     if (searchTerm === '') {
       return randomChoice(
-        this.termLib.map(({ params: { imgPath } }) => imgPath),
+        this.termLib.map(({ params }) => params),
       );
     }
     if (this.searchBuffer[searchTerm] !== undefined) return this.searchBuffer[searchTerm];
     const result = this.termLib
       .sort((a, b) => similarity(b.term, searchTerm) - similarity(a.term, searchTerm))
-      .map(({ params: { imgPath } }) => imgPath);
+      .map(({ params }) => params);
     this.searchBuffer[searchTerm] = result;
     return result;
   }
