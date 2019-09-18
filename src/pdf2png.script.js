@@ -3,15 +3,13 @@ import path from 'path';
 import rmrf from 'rimraf';
 import ProgressBar from 'progress';
 import PDF2Pic from 'pdf2pic';
+import AppConfig from '../config/AppConfig.const';
 import listDirRec from './util/listDirRec.func';
 import TaskQueueManager from './util/TaskQueueManager.class';
 
-const DATA_DIR = 'data';
-const PDF_DIR = `${DATA_DIR}/pdf`;
-const PNG_DIR = `${DATA_DIR}/png`;
 
 console.log('INFO [pdf2png]: listing pdf files...');
-const pdfFileList = listDirRec(PDF_DIR).filter((f) => f.toLowerCase().endsWith('pdf'));
+const pdfFileList = listDirRec(AppConfig.PATHS.PDF_DIR).filter((f) => f.toLowerCase().endsWith('pdf'));
 
 console.log('INFO [pdf2png]: start conversion from pdf to png');
 const progressBar = new ProgressBar('INFO [pdf2png]: converting to png [:bar] :percent', {
@@ -26,7 +24,7 @@ pdfFileList.forEach((pdfPath) => {
   convertManager.registerTask({
     job: (cb) => {
       const pngDir = pdfPath
-        .replace(PDF_DIR, PNG_DIR)
+        .replace(AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR)
         .replace('.PDF', '')
         .replace('.pdf', '');
 

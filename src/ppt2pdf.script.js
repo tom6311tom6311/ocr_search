@@ -2,15 +2,13 @@ import toPdf from 'office-to-pdf';
 import fs from 'fs';
 import path from 'path';
 import ProgressBar from 'progress';
+import AppConfig from '../config/AppConfig.const';
 import listDirRec from './util/listDirRec.func';
 import TaskQueueManager from './util/TaskQueueManager.class';
 
-const DATA_DIR = 'data';
-const PPT_DIR = `${DATA_DIR}/ppt`;
-const PDF_DIR = `${DATA_DIR}/pdf`;
 
 console.log('INFO [ppt2pdf]: listing ppt files...');
-const pptFileList = listDirRec(PPT_DIR).filter((f) => f.toLowerCase().endsWith('ppt') || f.toLowerCase().endsWith('pptx'));
+const pptFileList = listDirRec(AppConfig.PATHS.PPT_DIR).filter((f) => f.toLowerCase().endsWith('ppt') || f.toLowerCase().endsWith('pptx'));
 
 const progressBar = new ProgressBar('INFO [ppt2pdf]: converting to pdf [:bar] :percent', {
   complete: '=',
@@ -25,7 +23,7 @@ pptFileList.forEach((pptPath) => {
     job: (cb) => {
       const pptFile = fs.readFileSync(pptPath);
       const pdfPath = pptPath
-        .replace(PPT_DIR, PDF_DIR)
+        .replace(AppConfig.PATHS.PPT_DIR, AppConfig.PATHS.PDF_DIR)
         .replace('.PPTX', '.pdf')
         .replace('.PPT', '.pdf')
         .replace('.pptx', '.pdf')

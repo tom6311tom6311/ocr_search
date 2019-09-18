@@ -1,13 +1,11 @@
 import fs from 'fs';
 import ApiServer from './ApiServer/ApiServer.class';
 import TermMatcher from './TermMatcher/TermMatcher.class';
+import AppConfig from '../config/AppConfig.const';
 
-const DATA_DIR = 'data';
-const OCR_RESULT_PATH = `${DATA_DIR}/ocr_result.json`;
-const API_PORT = 7055;
 
-const ocrData = JSON.parse(fs.readFileSync(OCR_RESULT_PATH));
+const ocrData = JSON.parse(fs.readFileSync(AppConfig.PATHS.OCR_RESULT_PATH));
 TermMatcher.loadTermLib(ocrData);
 
 const apiServer = new ApiServer();
-apiServer.start(API_PORT);
+apiServer.start(AppConfig.API_SERVER.PORT);
