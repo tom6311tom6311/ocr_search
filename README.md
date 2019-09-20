@@ -6,8 +6,8 @@ A node application for extracting text from documents and images using OCR and p
 2. Install `libreoffice` command line tool (the `soffice` command)
 3. Install `graphicsmagick` and `ghostscript`
 4. > sudo npm i -g forever
-5. > git clone git@github.com:tom6311tom6311/ocr_search.git
-6. > cd ocr_search
+5. clone the project
+6. change directory to the project
 7. > npm i
 
 ## How to Run
