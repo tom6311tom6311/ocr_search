@@ -7,27 +7,25 @@ import listDirRec from './util/listDirRec.func';
 import TaskQueueManager from './util/TaskQueueManager.class';
 
 
-console.log('INFO [ppt2pdf]: listing ppt files...');
-const pptFileList = listDirRec(AppConfig.PATHS.PPT_DIR).filter((f) => f.toLowerCase().endsWith('ppt') || f.toLowerCase().endsWith('pptx'));
+console.log('INFO [pptx2pdf]: listing pptx files...');
+const pptxFileList = listDirRec(AppConfig.PATHS.PPTX_DIR).filter((f) => f.toLowerCase().endsWith('pptx'));
 
-const progressBar = new ProgressBar('INFO [ppt2pdf]: converting to pdf [:bar] :percent', {
+const progressBar = new ProgressBar('INFO [pptx2pdf]: converting to pdf [:bar] :percent', {
   complete: '=',
   incomplete: ' ',
   width: 20,
-  total: pptFileList.length,
+  total: pptxFileList.length,
 });
 
 const convertManager = new TaskQueueManager(100000);
-pptFileList.forEach((pptPath) => {
+pptxFileList.forEach((pptxPath) => {
   convertManager.registerTask({
     job: (cb) => {
-      const pptFile = fs.readFileSync(pptPath);
-      const pdfPath = pptPath
-        .replace(AppConfig.PATHS.PPT_DIR, AppConfig.PATHS.PDF_DIR)
+      const pptxFile = fs.readFileSync(pptxPath);
+      const pdfPath = pptxPath
+        .replace(AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.PDF_DIR)
         .replace('.PPTX', '.pdf')
-        .replace('.PPT', '.pdf')
-        .replace('.pptx', '.pdf')
-        .replace('.ppt', '.pdf');
+        .replace('.pptx', '.pdf');
 
       if (fs.existsSync(pdfPath)) {
         fs.unlinkSync(pdfPath);
@@ -37,19 +35,19 @@ pptFileList.forEach((pptPath) => {
         fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
       }
 
-      toPdf(pptFile).then(
+      toPdf(pptxFile).then(
         (pdfFile) => {
           fs.writeFileSync(pdfPath, pdfFile);
           progressBar.tick();
           cb();
         }, (err) => {
-          console.log(`ERROR [ppt2pdf]: ${err}`);
+          console.log(`ERROR [pptx2pdf]: ${err}`);
           cb();
         },
       );
     },
     failCallback: () => {
-      console.log(`ERROR [ppt2pdf]: timeout during converting file '${pptPath}'`);
+      console.log(`ERROR [pptx2pdf]: timeout during converting file '${pptxPath}'`);
     },
   });
 });

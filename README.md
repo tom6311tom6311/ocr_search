@@ -13,10 +13,10 @@ A node application for extracting text from documents and images using OCR and p
 ## How to Run
 The procedure goes as follows:
 1. Under root directory, create a folder named `data/`.
-2. Under `data/`, create 2 folders, `ppt/` and `pdf/`.
-3. Drop the PowerPoint files and PDF files into `data/ppt/` and `data/pdf/`, respectively.
-4. To convert ppt to pdf:
-    - > npm run ppt2pdf
+2. Under `data/`, create 2 folders, `pptx/` and `pdf/`.
+3. Drop the PowerPoint files and PDF files into `data/pptx/` and `data/pdf/`, respectively.
+4. To convert pptx to pdf:
+    - > npm run pptx2pdf
 5. To convert pdf to png:
     - > npm run pdf2png
 6. To extract text from png files:

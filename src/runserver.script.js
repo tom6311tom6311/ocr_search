@@ -1,8 +1,12 @@
 import fs from 'fs';
+import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import TermMatcher from './TermMatcher/TermMatcher.class';
-import AppConfig from '../config/AppConfig.const';
+import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
 
+DropboxSynchronizer.startSync((diff) => {
+  console.log(diff);
+});
 
 const ocrData = JSON.parse(fs.readFileSync(AppConfig.PATHS.OCR_RESULT_PATH));
 TermMatcher.loadTermLib(ocrData);

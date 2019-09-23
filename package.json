@@ -5,7 +5,7 @@
   "main": "src/runserver.script.js",
   "scripts": {
     "start": "./node_modules/.bin/babel-node src/runserver.script.js",
-    "ppt2pdf": "./node_modules/.bin/babel-node src/ppt2pdf.script.js",
+    "pptx2pdf": "./node_modules/.bin/babel-node src/pptx2pdf.script.js",
     "pdf2png": "./node_modules/.bin/babel-node src/pdf2png.script.js",
     "ocr": "./node_modules/.bin/babel-node src/ocr.script.js",
     "lint": "eslint \"**/*.js\"",
@@ -31,7 +31,9 @@
   "homepage": "https://github.com/tom6311tom6311/ocr_search#readme",
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "dropbox": "^4.0.30",
     "express": "^4.17.1",
+    "isomorphic-fetch": "^2.2.1",
     "leven": "^3.1.0",
     "office-to-pdf": "^4.0.0",
     "pdf2pic": "^1.3.9",
