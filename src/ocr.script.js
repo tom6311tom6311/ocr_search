@@ -8,7 +8,7 @@ import TaskQueueManager from './util/TaskQueueManager.class';
 
 
 console.log('INFO [ocr]: listing image files...');
-const pngFileList = listDirRec(AppConfig.PATHS.PNG_DIR).filter((f) => f.toLowerCase().endsWith('png'));
+const pngFileList = listDirRec(AppConfig.PATHS.PNG_DIR).filter((f) => f.endsWith('png'));
 
 console.log('INFO [ocr]: start character recognition');
 const progressBar = new ProgressBar('INFO [ocr]: recognizing characters  [:bar]  :current/:total ETA :etas', {

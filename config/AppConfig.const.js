@@ -10,6 +10,9 @@ const AppConfig = {
     OCR_TMP_RESULT_PATH: `${DATA_DIR}/ocr_tmp_result.json`,
     LOCAL_FILE_LIB: `${DATA_DIR}/local_file_lib.json`,
   },
+  TYPE_CONVERT: {
+    TIMEOUT: 150 * 1000,
+  },
   OCR: {
     // CONFIDENCE_THRES: 0,
   },
@@ -18,7 +21,7 @@ const AppConfig = {
   },
   DROPBOX: {
     ACCESS_TOKEN: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    SYNC_INTERVAL: 5 * 60 * 1000,
+    SYNC_INTERVAL: 15 * 60 * 1000,
   },
 };
 

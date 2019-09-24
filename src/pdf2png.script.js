@@ -9,7 +9,7 @@ import TaskQueueManager from './util/TaskQueueManager.class';
 
 
 console.log('INFO [pdf2png]: listing pdf files...');
-const pdfFileList = listDirRec(AppConfig.PATHS.PDF_DIR).filter((f) => f.toLowerCase().endsWith('pdf'));
+const pdfFileList = listDirRec(AppConfig.PATHS.PDF_DIR).filter((f) => f.endsWith('pdf'));
 
 console.log('INFO [pdf2png]: start conversion from pdf to png');
 const progressBar = new ProgressBar('INFO [pdf2png]: converting to png [:bar] :percent', {
@@ -25,7 +25,6 @@ pdfFileList.forEach((pdfPath) => {
     job: (cb) => {
       const pngDir = pdfPath
         .replace(AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR)
-        .replace('.PDF', '')
         .replace('.pdf', '');
 
       if (fs.existsSync(pngDir)) {

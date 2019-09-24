@@ -8,7 +8,7 @@ import TaskQueueManager from './util/TaskQueueManager.class';
 
 
 console.log('INFO [pptx2pdf]: listing pptx files...');
-const pptxFileList = listDirRec(AppConfig.PATHS.PPTX_DIR).filter((f) => f.toLowerCase().endsWith('pptx'));
+const pptxFileList = listDirRec(AppConfig.PATHS.PPTX_DIR).filter((f) => f.endsWith('pptx'));
 
 const progressBar = new ProgressBar('INFO [pptx2pdf]: converting to pdf [:bar] :percent', {
   complete: '=',
@@ -24,7 +24,6 @@ pptxFileList.forEach((pptxPath) => {
       const pptxFile = fs.readFileSync(pptxPath);
       const pdfPath = pptxPath
         .replace(AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.PDF_DIR)
-        .replace('.PPTX', '.pdf')
         .replace('.pptx', '.pdf');
 
       if (fs.existsSync(pdfPath)) {
