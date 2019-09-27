@@ -46,9 +46,9 @@ class TypeConverter {
   }
 
   pdf2png(pdfPath, callback = () => {}) {
-    console.log(`INFO [TypeConverter]: converting ${pdfPath} to png...`);
     this.convertManager.registerTask({
       job: (cb) => {
+        console.log(`INFO [TypeConverter]: converting ${pdfPath} to png...`);
         const pngDir = pdfPath
           .replace(AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR)
           .replace('.pdf', '');

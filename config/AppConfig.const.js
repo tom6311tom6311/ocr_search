@@ -13,8 +13,9 @@ const AppConfig = {
   TYPE_CONVERT: {
     TIMEOUT: 150 * 1000,
   },
-  OCR: {
+  TEXT_EXTRACT: {
     // CONFIDENCE_THRES: 0,
+    TIMEOUT: 5 * 60 * 1000,
   },
   API_SERVER: {
     PORT: 7055,
@@ -22,6 +23,12 @@ const AppConfig = {
   DROPBOX: {
     ACCESS_TOKEN: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     SYNC_INTERVAL: 15 * 60 * 1000,
+  },
+  MONGO_DB: {
+    URL: 'mongodb://localhost:27017',
+    POOL_SIZE: 10,
+    DB_NAME: 'term_db',
+    COLLECTION_NAME: 'pages',
   },
 };
 

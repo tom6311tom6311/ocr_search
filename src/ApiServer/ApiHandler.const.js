@@ -11,9 +11,17 @@ const ApiHandler = [
         if (typeof searchTerm !== 'string') {
           res.status(400).send({ message: 'search term is not specified or is in wrong format' });
         } else {
-          res.send({
-            pageList: TermMatcher.match(searchTerm),
-          });
+          TermMatcher.match(
+            searchTerm,
+            (pageList) => {
+              res.end(JSON.stringify({
+                pageList: pageList.map(({ oriFilePath, pageIdx, imgPath }) => ({ oriFilePath, pageIdx, imgPath })),
+              }));
+            },
+            () => {
+              res.status(500).send({ message: 'internal server error' });
+            },
+          );
         }
       },
     ],
