@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import AppConfig from '../../config/AppConfig.const';
+import escapeRegExp from '../util/escapeRegExp.func';
 
 class DbInterface {
   constructor() {
@@ -60,7 +61,7 @@ class DbInterface {
       .db(AppConfig.MONGO_DB.DB_NAME)
       .collection(AppConfig.MONGO_DB.COLLECTION_NAME)
       .deleteMany(
-        { id: new RegExp(`^${idPrefix}+`, 'g') },
+        { id: new RegExp(`^${escapeRegExp(idPrefix)}+`, 'g') },
         {},
         (error) => {
           if (error) {
@@ -78,7 +79,7 @@ class DbInterface {
       .db(AppConfig.MONGO_DB.DB_NAME)
       .collection(AppConfig.MONGO_DB.COLLECTION_NAME)
       .find(
-        { term: new RegExp(`${searchTerm.replace(' ', '|')}`, 'g') }, // term: /偵測/g
+        { term: new RegExp(`${escapeRegExp(searchTerm).replace(' ', '|')}`, 'g') },
       )
       .toArray((error, pages) => {
         if (error) {
