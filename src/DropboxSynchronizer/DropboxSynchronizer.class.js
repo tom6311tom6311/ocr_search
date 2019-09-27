@@ -23,7 +23,7 @@ class DropboxSynchronizer {
       });
   }
 
-  startSync(callback = () => {}) {
+  startSync(diffCallback = () => {}) {
     const syncTask = () => {
       console.log('INFO [DropboxSynchronizer]: start sync...');
       this.fetchDropboxFileLib((dropboxFileLib) => {
@@ -40,7 +40,7 @@ class DropboxSynchronizer {
               this.downloadFile(pptxPath, () => {
                 toDownload -= 1;
                 if (toDownload === 0) {
-                  callback(
+                  diffCallback(
                     diff,
                     () => {
                       this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
@@ -57,7 +57,7 @@ class DropboxSynchronizer {
               this.downloadFile(pdfPath, () => {
                 toDownload -= 1;
                 if (toDownload === 0) {
-                  callback(
+                  diffCallback(
                     diff,
                     () => {
                       this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
@@ -67,8 +67,10 @@ class DropboxSynchronizer {
               });
             });
           });
+        let hasDiff = toDownload !== 0;
         diff.deleted.pptx.forEach((pptxPath) => {
           console.log(`INFO [DropboxSynchronizer]: delete '${pptxPath}' and its related files`);
+          hasDiff = true;
           const pdfPath = PathConvert.pptx.toPdf(pptxPath);
           const pngDirPath = PathConvert.pptx.toPngDir(pptxPath);
           if (fs.existsSync(pptxPath)) fs.unlinkSync(pptxPath);
@@ -80,12 +82,15 @@ class DropboxSynchronizer {
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
           if (!fs.existsSync(pptxPath)) {
             console.log(`INFO [DropboxSynchronizer]: delete '${pdfPath}' and its related files`);
+            hasDiff = true;
             if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
             if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
           }
         });
-        if (toDownload === 0) {
-          callback(
+        if (!hasDiff) {
+          this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
+        } else if (toDownload === 0) {
+          diffCallback(
             diff,
             () => {
               this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);

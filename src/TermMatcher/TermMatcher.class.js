@@ -8,6 +8,10 @@ class TermMatcher {
     this.searchBuffer = {};
   }
 
+  clearBuffer() {
+    this.searchBuffer = {};
+  }
+
   match(searchTerm, callback = () => {}, failCallback = () => {}) {
     if (this.searchBuffer[searchTerm] !== undefined) callback(this.searchBuffer[searchTerm]);
     DbInterface.findPages(searchTerm, (pages) => {
