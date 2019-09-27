@@ -16,7 +16,7 @@ class TextExtractor {
       job: (cb) => {
         const pptxPath = PathConvert.pdf.toPptx(pdfPath);
         const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
-        const oriFilePath = fs.existsSync(pptxPath) ? pptxPath : pdfPath;
+        const oriFilePath = fs.existsSync(pptxPath) ? pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) : pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1);
         this.pdfExtract.extract(
           pdfPath,
           {},

@@ -4,11 +4,12 @@ import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class
 import TypeConverter from './TypeConverter/TypeConverter.class';
 import TextExtractor from './TextExtractor/TextExtractor.class';
 import DbInterface from './DbInterface/DbInterface.class';
-import PathConvert from './util/PathConvert.const';
+import TermMatcher from './TermMatcher/TermMatcher.class';
 
 
 DropboxSynchronizer.startSync(
   (diff, cb = () => {}) => {
+    TermMatcher.clearBuffer();
     let toConvert = 0;
     const checkTerminate = () => {
       toConvert -= 1;
@@ -48,15 +49,13 @@ DropboxSynchronizer.startSync(
           );
       });
     diff.deleted.pptx.forEach((pptxPath) => {
-      const pngDirPath = PathConvert.pptx.toPngDir(pptxPath);
       DbInterface.deletePages(
-        pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1),
+        pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1),
       );
     });
     diff.deleted.pdf.forEach((pdfPath) => {
-      const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
       DbInterface.deletePages(
-        pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1),
+        pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1),
       );
     });
     if (toConvert === 0) cb();
