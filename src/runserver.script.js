@@ -1,3 +1,4 @@
+import { spawn } from 'child_process';
 import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
@@ -29,6 +30,12 @@ DropboxSynchronizer.startSync(
                   .replace('.pptx', '.pdf');
                 TypeConverter.pdf2png(pdfPath, () => {
                   TextExtractor.extractFromPdf(pdfPath, ({ pages }) => {
+                    pages.forEach(({ term }) => {
+                      const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', term]);
+                      tokenizingProcess.stdout.on('data', (data) => {
+                        console.log(data.toString());
+                      });
+                    });
                     DbInterface.updatePages(pages, checkTerminate, checkTerminate);
                   }, checkTerminate);
                 });

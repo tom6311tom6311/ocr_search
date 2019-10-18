@@ -1,4 +1,4 @@
 **.DS_Store
-**.traineddata
+model/**
 data/**
 node_modules/**
