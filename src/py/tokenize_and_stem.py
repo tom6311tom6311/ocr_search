@@ -45,13 +45,21 @@ for w in words:
 lemmatizer = WordNetLemmatizer()
 eng_words = [lemmatizer.lemmatize(lemmatizer.lemmatize(w, pos="v")) for w in eng_words]
 
-# output english words
-print(eng_words)
-
 # segment chinese sentence
 jieba.set_dictionary('model/dict.txt.big')
 chinese_sentence = ''.join([c for c in chinese_sentence if u'\u4e00' <= c <= u'\u9fff'])
-chinese_words = list(set([w for w in jieba.cut_for_search(chinese_sentence)]))
+chinese_words = [w for w in jieba.cut_for_search(chinese_sentence)]
 
-# output chinese words
-print(chinese_words)
+# merge word lists
+words = eng_words + chinese_words
+
+# count word frequencies
+word_freq_dict = {}
+for w in words:
+  if (w in word_freq_dict):
+    word_freq_dict[w] += 1
+  else:
+    word_freq_dict[w] = 1
+
+# output
+print(word_freq_dict)
