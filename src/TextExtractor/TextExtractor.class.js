@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { PDFExtract } from 'pdf.js-extract';
+import uuidv4 from 'uuid/v4';
 import TaskQueueManager from '../util/TaskQueueManager.class';
 import AppConfig from '../../config/AppConfig.const';
 import PathConvert from '../util/PathConvert.const';
@@ -34,6 +35,7 @@ class TextExtractor {
                   .filter((str) => str !== '');
                 pages.push({
                   id: `${oriFilePath}_${pageIdx}`,
+                  docId: uuidv4(),
                   oriFilePath,
                   pageIdx,
                   imgPath: `${pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1)}/${path.basename(pngDirPath)}_${pageIdx}.png`,
