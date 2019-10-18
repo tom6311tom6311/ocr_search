@@ -3,12 +3,14 @@ A node application for extracting text from documents and images using OCR and p
 
 ## How to Install
 1. Install `Node.js` v10.16.3 and `npm` v6.9.0 (or later)
-2. Install `libreoffice` command line tool (the `soffice` command)
-3. Install `graphicsmagick` and `ghostscript`
-4. > sudo npm i -g forever
-5. clone the project
-6. change directory to the project
-7. > npm i
+2. Install `Python` v3.7 and `nltk` v3.4.5 (or later)
+3. Install `libreoffice` command line tool (the `soffice` command)
+4. Install `graphicsmagick` and `ghostscript`
+5. > sudo npm i -g forever
+6. clone the project
+7. change directory to the project
+8. > npm i
+9. > python3 src/py/download_nltk_data.py
 
 ## How to Run
 The procedure goes as follows:
