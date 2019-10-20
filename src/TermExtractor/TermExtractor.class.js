@@ -1,12 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
+import { spawn } from 'child_process';
 import { PDFExtract } from 'pdf.js-extract';
-import uuidv4 from 'uuid/v4';
 import TaskQueueManager from '../util/TaskQueueManager.class';
 import AppConfig from '../../config/AppConfig.const';
 import PathConvert from '../util/PathConvert.const';
 
-class TextExtractor {
+class TermExtractor {
   constructor() {
     this.taskManager = new TaskQueueManager(AppConfig.TEXT_EXTRACT.TIMEOUT);
     this.pdfExtract = new PDFExtract();
@@ -23,34 +24,41 @@ class TextExtractor {
           {},
           (error, data) => {
             if (error) {
-              console.log(`ERROR [TextExtractor]: ${error}`);
+              console.log(`ERROR [TermExtractor]: ${error}`);
               failCallback();
             } else {
+              const fileId = crypto.createHash('sha256').update(oriFilePath).digest('hex');
               const { pages: rawPages } = data;
               const pages = [];
-              rawPages.forEach(({ content }) => {
-                const pageIdx = pages.length + 1;
-                const textList = content
+              rawPages.forEach(({ content }, pageIdx) => {
+                const text = content
                   .map(({ str }) => str.replace(/|•|、/g, '').replace(/^ +| +$/g, ''))
-                  .filter((str) => str !== '');
-                pages.push({
-                  id: `${oriFilePath}_${pageIdx}`,
-                  docId: uuidv4(),
-                  oriFilePath,
-                  pageIdx,
-                  imgPath: `${pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1)}/${path.basename(pngDirPath)}_${pageIdx}.png`,
-                  textList,
-                  term: textList.join(', ').toLowerCase(),
+                  .filter((str) => str !== '')
+                  .join(', ')
+                  .toLowerCase();
+                const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
+                tokenizingProcess.stdout.on('data', (buf) => {
+                  const termFreqDict = JSON.parse(buf.toString());
+                  pages.push({
+                    fileId,
+                    docId: crypto.createHash('sha256').update(`${oriFilePath}_${pageIdx}`).digest('hex'),
+                    oriFilePath,
+                    pageIdx,
+                    imgPath: `${pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1)}/${path.basename(pngDirPath)}_${pageIdx}.png`,
+                    termFreqDict,
+                  });
+                  if (pages.length === rawPages.length) {
+                    callback({ pages });
+                    cb();
+                  }
                 });
               });
-              callback({ pages });
-              cb();
             }
           },
         );
       },
       failCallback: () => {
-        console.log(`ERROR [TextExtractor]: timeout during extracting '${pdfPath}'`);
+        console.log(`ERROR [TermExtractor]: timeout during extracting '${pdfPath}'`);
         failCallback();
       },
     });
@@ -59,4 +67,4 @@ class TextExtractor {
   // extractFromPng(pngDirPath, callback = () => {}, failCallback = () => {}) {}
 }
 
-export default new TextExtractor();
+export default new TermExtractor();

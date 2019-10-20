@@ -1,9 +1,8 @@
-import { spawn } from 'child_process';
 import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
 import TypeConverter from './TypeConverter/TypeConverter.class';
-import TextExtractor from './TextExtractor/TextExtractor.class';
+import TermExtractor from './TermExtractor/TermExtractor.class';
 import DbInterface from './DbInterface/DbInterface.class';
 import TermMatcher from './TermMatcher/TermMatcher.class';
 
@@ -29,13 +28,14 @@ DropboxSynchronizer.startSync(
                   .replace(AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.PDF_DIR)
                   .replace('.pptx', '.pdf');
                 TypeConverter.pdf2png(pdfPath, () => {
-                  TextExtractor.extractFromPdf(pdfPath, ({ pages }) => {
-                    pages.forEach(({ term }) => {
-                      const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', term]);
-                      tokenizingProcess.stdout.on('data', (data) => {
-                        console.log(data.toString());
-                      });
-                    });
+                  TermExtractor.extractFromPdf(pdfPath, ({ pages }) => {
+                    console.log(pages);
+                    // pages.forEach(({ term }) => {
+                    //   const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', term]);
+                    //   tokenizingProcess.stdout.on('data', (data) => {
+                    //     console.log(data.toString());
+                    //   });
+                    // });
                     DbInterface.updatePages(pages, checkTerminate, checkTerminate);
                   }, checkTerminate);
                 });
@@ -48,7 +48,7 @@ DropboxSynchronizer.startSync(
             (pdfPath) => {
               toConvert += 1;
               TypeConverter.pdf2png(pdfPath, () => {
-                TextExtractor.extractFromPdf(pdfPath, ({ pages }) => {
+                TermExtractor.extractFromPdf(pdfPath, ({ pages }) => {
                   DbInterface.updatePages(pages, checkTerminate, checkTerminate);
                 }, checkTerminate);
               });

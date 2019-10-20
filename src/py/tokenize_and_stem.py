@@ -6,6 +6,7 @@ import sys
 import nltk
 import string
 import jieba
+import json
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
@@ -19,47 +20,47 @@ def isPureAscii(s):
   else:
     return True
 
-# get input sentence from system argument
-sentence = sys.argv[1]
+# get input text from system argument
+text = sys.argv[1]
 
 # remove punctuations
 for p in string.punctuation:
-  sentence = sentence.replace(p, ' ')
+  text = text.replace(p, ' ')
 
-# print(sentence)
+# print(text)
 
-# tokenize sentence
-words = word_tokenize(sentence)
+# tokenize text
+words = word_tokenize(text)
 
 # split into 2 languages, english and chinese
 eng_words = []
-chinese_sentence = ''
+chi_text = ''
 for w in words:
   if not isPureAscii(w):
-    chinese_sentence += w
+    chi_text += w
   else:
     if len(w) > 1 and any(c.isalpha() for c in w) and w not in stopwords.words():
       eng_words.append(w)
 
 # lemmatize english words
 lemmatizer = WordNetLemmatizer()
-eng_words = [lemmatizer.lemmatize(lemmatizer.lemmatize(w, pos="v")) for w in eng_words]
+eng_terms = [lemmatizer.lemmatize(lemmatizer.lemmatize(w, pos="v")) for w in eng_words]
 
-# segment chinese sentence
+# segment chinese text
 jieba.set_dictionary('model/dict.txt.big')
-chinese_sentence = ''.join([c for c in chinese_sentence if u'\u4e00' <= c <= u'\u9fff'])
-chinese_words = [w for w in jieba.cut_for_search(chinese_sentence)]
+chi_text = ''.join([c for c in chi_text if u'\u4e00' <= c <= u'\u9fff'])
+chi_terms = [w for w in jieba.cut_for_search(chi_text)]
 
-# merge word lists
-words = eng_words + chinese_words
+# merge term lists
+terms = eng_terms + chi_terms
 
-# count word frequencies
-word_freq_dict = {}
-for w in words:
-  if (w in word_freq_dict):
-    word_freq_dict[w] += 1
+# count term frequencies
+term_freq_dict = {}
+for t in terms:
+  if (t in term_freq_dict):
+    term_freq_dict[t] += 1
   else:
-    word_freq_dict[w] = 1
+    term_freq_dict[t] = 1
 
 # output
-print(word_freq_dict)
+print(json.dumps(term_freq_dict))
