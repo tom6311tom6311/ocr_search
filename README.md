@@ -39,6 +39,10 @@ The procedure goes as follows:
     - Required
       - `searchTerm=<string>`
         - The search term inserted by user in order to find related pages
+    - Optional
+      - `maxReturn=<positive integer>`
+        - Maximum number of returned searching results
+        - Default value: 20
   - Body: None
   - Success Response:
     - Code: `200 OK`
@@ -48,9 +52,12 @@ The procedure goes as follows:
         - `imgPath` in each `pageList` item can be used to locate the snapshot of corresponding slide page in the `Get Page Image` API
   - Error Response:
     - Code: `400 Bad Request`
-    - Content: `{ message: 'search term is not specified or is in wrong format'}`
+    - Content:
+      - `{ message: 'search term is not specified or is in wrong format'}`
+      - `{"message":"maxReturn should be a positive integer"}`
   - Request Example:
     - > curl http://localhost:7055/pages?searchTerm='blabla'
+    - > curl http://localhost:7055/pages?searchTerm='blabla'&maxReturn=10
 - Get Page Image
   - Path: `/pageImg/<imgPath>`
   - Method: `GET`
