@@ -1,5 +1,10 @@
-# OCR Search
-A node application for extracting text from documents and images using OCR and providing text-based search API
+# Intelligent Search System
+A Node.js-based search system with following capabilities:
+- Letting user search for documents by keywords among a large document set
+- Automatic preprocessing and indexing of new documents
+- Automatic and unsupervised keyword extraction
+- Semantic matching between user query and index terms
+- Adaptively improve the search results based on the collected user events and feedbacks
 
 ## How to Install
 1. Install `Node.js` v10.16.3 and `npm` v6.9.0 (or later)
@@ -7,28 +12,23 @@ A node application for extracting text from documents and images using OCR and p
 3. Install python packages and `nltk >= 3.4.5` and `jieba >= 0.39`
 4. Install `libreoffice` command line tool (the `soffice` command)
 5. Install `graphicsmagick` and `ghostscript`
-6. > sudo npm i -g forever
-7. clone the project
-8. change directory to the project
-9. > npm i
-10. > python3 src/py/download_nlp_data.py
+6. Install latest `MongoDB`
+7. > sudo npm i -g forever
+8. clone the project
+9. change directory to the project
+10. > npm i
+11. > python3 src/py/download_nlp_data.py
 
 ## How to Run
 The procedure goes as follows:
-1. Under root directory, create a folder named `data/`.
-2. Under `data/`, create 2 folders, `pptx/` and `pdf/`.
-3. Drop the PowerPoint files and PDF files into `data/pptx/` and `data/pdf/`, respectively.
-4. To convert pptx to pdf:
-    - > npm run pptx2pdf
-5. To convert pdf to png:
-    - > npm run pdf2png
-6. To extract text from png files:
-    - > npm run ocr
-    - Be patient throughout whole procedure. The OCR result will be saved in `data/ocr_result.json`
-7. Once the OCR procedure finishes, run an API server by following terminal command:
+1. Create a Dropbox app [here](https://www.dropbox.com/developers/apps), generate an access token and paste it to the `DROPBOX.ACCESS_TOKEN` setting under `config/AppConfig.const.js`
+2. Now there will be an app folder `Apps/<your_app_name>/` under your Dropbox root directory. In this folder, create 3 sub-folders, `pptx/`, `docx/` and `pdf/`.
+3. Upload the PowerPoint files, Word files and PDF files to `pptx/`, `docx/` and `pdf/`, respectively.
+4. Run the intelligent search system by following terminal command:
     - > npm start
-    - By default, the API server will be hosted on port ***7055***. This configuration can be changed by modifying `config/AppConfig.const.js`
-8. To run the API server in background permanently:
+5. Now the system will start to download files from your Dropbox app folder and process them. If there are new files needing to be considered or out-dated files needing to be changed or removed, just do it on the Dropbox app folder. The intelligent search system will periodically check for updates on the Dropbox app folder and keep in synchronized with it.
+6. Now the API server is also started. By default, the API server will be hosted on port ***7055***. This configuration can be changed by modifying `config/AppConfig.const.js`
+8. To run the system in background permanently, leave the current process by inserting `CTRL+C` and then type the following command:
     - > forever start -c "node -r babel-register" src/runserver.script.js
 
 ## API Reference

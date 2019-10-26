@@ -18,8 +18,13 @@ class TermExtractor {
       this.taskManager.registerTask({
         job: (cb) => {
           const pptxPath = PathConvert.pdf.toPptx(pdfPath);
+          const docxPath = PathConvert.pdf.toDocx(pdfPath);
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
-          const oriFilePath = fs.existsSync(pptxPath) ? pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) : pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1);
+          let oriFilePath = pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1);
+
+          if (fs.existsSync(pptxPath)) oriFilePath = pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1);
+          else if (fs.existsSync(docxPath)) docxPath.substring(AppConfig.PATHS.DOCX_DIR.length + 1);
+
           this.pdfExtract.extract(
             pdfPath,
             {},

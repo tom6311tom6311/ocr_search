@@ -13,11 +13,28 @@ const PathConvert = {
         .replace('.pptx', '')
     ),
   },
+  docx: {
+    toPdf: (docxPath) => (
+      docxPath
+        .replace(AppConfig.PATHS.DOCX_DIR, AppConfig.PATHS.PDF_DIR)
+        .replace('.docx', '.pdf')
+    ),
+    toPngDir: (docxPath) => (
+      docxPath
+        .replace(AppConfig.PATHS.DOCX_DIR, AppConfig.PATHS.PNG_DIR)
+        .replace('.docx', '')
+    ),
+  },
   pdf: {
     toPptx: (pdfPath) => (
       pdfPath
         .replace(AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PPTX_DIR)
         .replace('.pdf', '.pptx')
+    ),
+    toDocx: (pdfPath) => (
+      pdfPath
+        .replace(AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.DOCX_DIR)
+        .replace('.pdf', '.docx')
     ),
     toPngDir: (pdfPath) => (
       pdfPath
@@ -31,6 +48,12 @@ const PathConvert = {
         pngDirPath
           .replace(AppConfig.PATHS.PNG_DIR, AppConfig.PATHS.PPTX_DIR)
       }.pptx`
+    ),
+    toDocx: (pngDirPath) => (
+      `${
+        pngDirPath
+          .replace(AppConfig.PATHS.PNG_DIR, AppConfig.PATHS.DOCX_DIR)
+      }.docx`
     ),
     toPdf: (pngDirPath) => (
       `${

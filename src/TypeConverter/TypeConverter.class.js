@@ -5,6 +5,7 @@ import toPdf from 'office-to-pdf';
 import PDF2Pic from 'pdf2pic';
 import TaskQueueManager from '../util/TaskQueueManager.class';
 import AppConfig from '../../config/AppConfig.const';
+import PathConvert from '../util/PathConvert.const';
 
 class TypeConverter {
   constructor() {
@@ -17,9 +18,7 @@ class TypeConverter {
         job: (cb) => {
           console.log(`INFO [TypeConverter]: converting ${pptxPath} to pdf...`);
           const pptxFile = fs.readFileSync(pptxPath);
-          const pdfPath = pptxPath
-            .replace(AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.PDF_DIR)
-            .replace('.pptx', '.pdf');
+          const pdfPath = PathConvert.pptx.toPdf(pptxPath);
 
           if (fs.existsSync(pdfPath)) {
             fs.unlinkSync(pdfPath);
@@ -43,6 +42,42 @@ class TypeConverter {
         },
         failCallback: () => {
           console.log(`ERROR [pptx2pdf]: timeout during converting file '${pptxPath}'`);
+          reject();
+        },
+      });
+    });
+  }
+
+  docx2pdf(docxPath) {
+    return new Promise((resolve, reject) => {
+      this.convertManager.registerTask({
+        job: (cb) => {
+          console.log(`INFO [TypeConverter]: converting ${docxPath} to pdf...`);
+          const docxFile = fs.readFileSync(docxPath);
+          const pdfPath = PathConvert.docx.toPdf(docxPath);
+
+          if (fs.existsSync(pdfPath)) {
+            fs.unlinkSync(pdfPath);
+          }
+
+          if (!fs.existsSync(path.dirname(pdfPath))) {
+            fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
+          }
+
+          toPdf(docxFile).then(
+            (pdfFile) => {
+              fs.writeFileSync(pdfPath, pdfFile);
+              resolve();
+              cb();
+            }, (err) => {
+              console.log(`ERROR [docx2pdf]: ${err}`);
+              reject();
+              cb();
+            },
+          );
+        },
+        failCallback: () => {
+          console.log(`ERROR [docx2pdf]: timeout during converting file '${docxPath}'`);
           reject();
         },
       });

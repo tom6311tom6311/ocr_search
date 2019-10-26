@@ -15,7 +15,7 @@ class DropboxSynchronizer {
     });
     this.syncTimeout = null;
 
-    [AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR]
+    [AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.DOCX_DIR, AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR]
       .forEach((dir) => {
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir, { recursive: true });
@@ -38,6 +38,23 @@ class DropboxSynchronizer {
                 fs.mkdirSync(path.dirname(pptxPath), { recursive: true });
               }
               this.downloadFile(pptxPath, () => {
+                toDownload -= 1;
+                if (toDownload === 0) {
+                  diffCallback(
+                    diff,
+                    () => {
+                      this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
+                    },
+                  );
+                }
+              });
+            });
+            diff[diffMode].docx.forEach((docxPath) => {
+              toDownload += 1;
+              if (!fs.existsSync(path.dirname(docxPath))) {
+                fs.mkdirSync(path.dirname(docxPath), { recursive: true });
+              }
+              this.downloadFile(docxPath, () => {
                 toDownload -= 1;
                 if (toDownload === 0) {
                   diffCallback(
@@ -77,10 +94,20 @@ class DropboxSynchronizer {
           if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
           if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
         });
+        diff.deleted.docx.forEach((docxPath) => {
+          console.log(`INFO [DropboxSynchronizer]: delete '${docxPath}' and its related files`);
+          hasDiff = true;
+          const pdfPath = PathConvert.docx.toPdf(docxPath);
+          const pngDirPath = PathConvert.docx.toPngDir(docxPath);
+          if (fs.existsSync(docxPath)) fs.unlinkSync(docxPath);
+          if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+          if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
+        });
         diff.deleted.pdf.forEach((pdfPath) => {
           const pptxPath = PathConvert.pdf.toPptx(pdfPath);
+          const docxPath = PathConvert.pdf.toDocx(pdfPath);
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
-          if (!fs.existsSync(pptxPath)) {
+          if (!fs.existsSync(pptxPath) && !fs.existsSync(docxPath)) {
             console.log(`INFO [DropboxSynchronizer]: delete '${pdfPath}' and its related files`);
             hasDiff = true;
             if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
@@ -118,6 +145,7 @@ class DropboxSynchronizer {
       .then(({ entries }) => {
         const fileLib = {
           pptx: {},
+          docx: {},
           pdf: {},
         };
         entries
@@ -125,6 +153,8 @@ class DropboxSynchronizer {
           .forEach(({ path_display: dropboxPath, server_modified: lastModified }) => {
             if (dropboxPath.startsWith('/pptx/') && dropboxPath.endsWith('pptx')) {
               fileLib.pptx[`data${dropboxPath}`] = { path: `data${dropboxPath}`, lastModified: Date.parse(lastModified) };
+            } else if (dropboxPath.startsWith('/docx/') && dropboxPath.endsWith('docx')) {
+              fileLib.docx[`data${dropboxPath}`] = { path: `data${dropboxPath}`, lastModified: Date.parse(lastModified) };
             } else if (dropboxPath.startsWith('/pdf/') && dropboxPath.endsWith('pdf')) {
               fileLib.pdf[`data${dropboxPath}`] = { path: `data${dropboxPath}`, lastModified: Date.parse(lastModified) };
             }
@@ -138,6 +168,7 @@ class DropboxSynchronizer {
     const filePathList = listDirRec('data');
     const fileLib = {
       pptx: {},
+      docx: {},
       pdf: {},
     };
     filePathList
@@ -145,6 +176,8 @@ class DropboxSynchronizer {
       .forEach(({ path: localPath, mtime: lastModified }) => {
         if (localPath.startsWith('data/pptx/') && localPath.endsWith('pptx')) {
           fileLib.pptx[localPath] = { path: localPath, lastModified };
+        } else if (localPath.startsWith('data/docx/') && localPath.endsWith('docx')) {
+          fileLib.docx[localPath] = { path: localPath, lastModified };
         } else if (localPath.startsWith('data/pdf/') && localPath.endsWith('pdf')) {
           fileLib.pdf[localPath] = { path: localPath, lastModified };
         }
@@ -156,18 +189,21 @@ class DropboxSynchronizer {
     const diff = {
       added: {
         pptx: [],
+        docx: [],
         pdf: [],
       },
       modified: {
         pptx: [],
+        docx: [],
         pdf: [],
       },
       deleted: {
         pptx: [],
+        docx: [],
         pdf: [],
       },
     };
-    ['pptx', 'pdf']
+    ['pptx', 'docx', 'pdf']
       .forEach((type) => {
         Object
           .entries(chgFileLib[type])
@@ -179,7 +215,7 @@ class DropboxSynchronizer {
             }
           });
       });
-    ['pptx', 'pdf']
+    ['pptx', 'docx', 'pdf']
       .forEach((type) => {
         Object
           .keys(oriFileLib[type])

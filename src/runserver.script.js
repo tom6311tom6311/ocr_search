@@ -23,6 +23,13 @@ DropboxSynchronizer.startSync(
               .then(() => TermExtractor.extractFromPdf(PathConvert.pptx.toPdf(pptxPath)))
               .then(({ pages }) => DbInterface.updateFile({ pages }))),
           diff[diffMode]
+            .docx
+            .map((docxPath) => TypeConverter
+              .docx2pdf(docxPath)
+              .then(() => TypeConverter.pdf2png(PathConvert.docx.toPdf(docxPath)))
+              .then(() => TermExtractor.extractFromPdf(PathConvert.docx.toPdf(docxPath)))
+              .then(({ pages }) => DbInterface.updateFile({ pages }))),
+          diff[diffMode]
             .pdf
             .map((pdfPath) => TypeConverter
               .pdf2png(pdfPath)
@@ -37,6 +44,13 @@ DropboxSynchronizer.startSync(
         .map((pptxPath) => DbInterface
           .deleteFile(
             { oriFilePath: pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) },
+          )),
+      diff
+        .deleted
+        .docx
+        .map((docxPath) => DbInterface
+          .deleteFile(
+            { oriFilePath: docxPath.substring(AppConfig.PATHS.DOCX_DIR.length + 1) },
           )),
       diff
         .deleted

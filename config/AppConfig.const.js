@@ -4,6 +4,7 @@ const AppConfig = {
   PATHS: {
     DATA_DIR,
     PPTX_DIR: `${DATA_DIR}/pptx`,
+    DOCX_DIR: `${DATA_DIR}/docx`,
     PDF_DIR: `${DATA_DIR}/pdf`,
     PNG_DIR: `${DATA_DIR}/png`,
   },
