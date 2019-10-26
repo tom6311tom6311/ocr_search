@@ -102,7 +102,7 @@ class TypeConverter {
           }
 
           const pdf2pic = new PDF2Pic({
-            density: 100,
+            density: 200,
             savename: path.basename(pngDir),
             savedir: pngDir,
             format: 'png',
