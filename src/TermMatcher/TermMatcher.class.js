@@ -1,7 +1,4 @@
-import leven from 'leven';
 import DbInterface from '../DbInterface/DbInterface.class';
-
-const similarity = (term1, term2) => Math.max(term1.length, term2.length) - leven(term1, term2);
 
 class TermMatcher {
   constructor() {
@@ -12,14 +9,26 @@ class TermMatcher {
     this.searchBuffer = {};
   }
 
-  match(searchTerm, callback = () => {}, failCallback = () => {}) {
-    if (this.searchBuffer[searchTerm] !== undefined) callback(this.searchBuffer[searchTerm]);
-    DbInterface.findPages(searchTerm, (pages) => {
-      const result = pages
-        .sort((a, b) => similarity(b.term, searchTerm) - similarity(a.term, searchTerm));
-      this.searchBuffer[searchTerm] = result;
-      callback(result);
-    }, failCallback);
+  match(searchTerms) {
+    const promises = [];
+    let documents = [];
+    searchTerms.forEach((term) => {
+      if (this.searchBuffer[term] !== undefined) documents = documents.concat(this.searchBuffer[term]);
+      else {
+        promises.push(
+          DbInterface
+            .getDocsByTerm({ term })
+            .then((docs) => {
+              // console.log(term, docs);
+              documents = documents.concat(docs);
+              this.searchBuffer[term] = docs;
+            }),
+        );
+      }
+    });
+    return Promise
+      .all(promises)
+      .then(() => documents.sort((a, b) => b.tf - a.tf));
   }
 }
 

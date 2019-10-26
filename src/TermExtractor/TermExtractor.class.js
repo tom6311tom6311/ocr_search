@@ -64,6 +64,31 @@ class TermExtractor {
     });
   }
 
+  extractFromQuery(query) {
+    return new Promise((resolve, reject) => {
+      this.taskManager.registerTask({
+        job: (cb) => {
+          const text = query.replace(/|•|、/g, '').replace(/^ +| +$/g, '').toLowerCase();
+          const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
+          tokenizingProcess.stdout.on('data', (buf) => {
+            const termFreqDict = JSON.parse(buf.toString());
+            resolve(Object.keys(termFreqDict));
+            cb();
+          });
+          tokenizingProcess.stdout.on('error', (error) => {
+            console.log(`ERROR [TermExtractor]: ${error}`);
+            reject();
+            cb();
+          });
+        },
+        failCallback: () => {
+          console.log(`ERROR [TermExtractor]: timeout during extracting query '${query}'`);
+          reject();
+        },
+      });
+    });
+  }
+
   // extractFromPng(pngDirPath, callback = () => {}, failCallback = () => {}) {}
 }
 

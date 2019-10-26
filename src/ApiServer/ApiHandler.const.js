@@ -1,5 +1,6 @@
 import express from 'express';
 import TermMatcher from '../TermMatcher/TermMatcher.class';
+import TermExtractor from '../TermExtractor/TermExtractor.class';
 
 const ApiHandler = [
   {
@@ -7,21 +8,22 @@ const ApiHandler = [
     path: '/pages',
     handlers: [
       (req, res) => {
-        const { searchTerm } = req.query;
-        if (typeof searchTerm !== 'string') {
+        const { searchTerm: query } = req.query;
+        if (typeof query !== 'string') {
           res.status(400).send({ message: 'search term is not specified or is in wrong format' });
         } else {
-          TermMatcher.match(
-            searchTerm,
-            (pageList) => {
+          TermExtractor
+            .extractFromQuery(query)
+            .then((searchTerms) => TermMatcher.match(searchTerms))
+            .then((pageList) => {
               res.end(JSON.stringify({
                 pageList: pageList.map(({ oriFilePath, pageIdx, imgPath }) => ({ oriFilePath, pageIdx, imgPath })),
               }));
-            },
-            () => {
+            })
+            .catch((error) => {
+              console.log(`ERROR [ApiHandler]: ${error}`);
               res.status(500).send({ message: 'internal server error' });
-            },
-          );
+            });
         }
       },
     ],

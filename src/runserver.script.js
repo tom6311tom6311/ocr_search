@@ -29,14 +29,8 @@ DropboxSynchronizer.startSync(
                   .replace('.pptx', '.pdf');
                 TypeConverter.pdf2png(pdfPath, () => {
                   TermExtractor.extractFromPdf(pdfPath, ({ pages }) => {
-                    console.log(pages);
-                    // pages.forEach(({ term }) => {
-                    //   const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', term]);
-                    //   tokenizingProcess.stdout.on('data', (data) => {
-                    //     console.log(data.toString());
-                    //   });
-                    // });
-                    DbInterface.updatePages(pages, checkTerminate, checkTerminate);
+                    DbInterface.updateFile({ pages })
+                      .finally(checkTerminate);
                   }, checkTerminate);
                 });
               });
@@ -49,20 +43,21 @@ DropboxSynchronizer.startSync(
               toConvert += 1;
               TypeConverter.pdf2png(pdfPath, () => {
                 TermExtractor.extractFromPdf(pdfPath, ({ pages }) => {
-                  DbInterface.updatePages(pages, checkTerminate, checkTerminate);
+                  DbInterface.updateFile({ pages })
+                    .finally(checkTerminate);
                 }, checkTerminate);
               });
             },
           );
       });
     diff.deleted.pptx.forEach((pptxPath) => {
-      DbInterface.deletePages(
-        pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1),
+      DbInterface.deleteFile(
+        { oriFilePath: pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) },
       );
     });
     diff.deleted.pdf.forEach((pdfPath) => {
-      DbInterface.deletePages(
-        pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1),
+      DbInterface.deleteFile(
+        { oriFilePath: pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1) },
       );
     });
     if (toConvert === 0) cb();
