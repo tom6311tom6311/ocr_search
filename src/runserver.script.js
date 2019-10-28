@@ -1,13 +1,11 @@
 import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
-import TermMatcher from './TermMatcher/TermMatcher.class';
 import ProcessDirector from './ProcessDirector/ProcessDirector.class';
 
 
 DropboxSynchronizer.startSync(
   (diff, cb = () => {}) => {
-    TermMatcher.clearBuffer();
     let promises = [];
     ['added', 'modified']
       .forEach((diffMode) => {

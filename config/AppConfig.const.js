@@ -29,6 +29,7 @@ const AppConfig = {
     COLLECTION_NAME: {
       DOCS: 'docs',
       TERM_FREQS: 'term_freqs',
+      TERM_CORRELATIONS: 'term_correlations',
     },
   },
 };

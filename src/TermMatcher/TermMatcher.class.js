@@ -1,35 +1,26 @@
 import DbInterface from '../DbInterface/DbInterface.class';
 
 class TermMatcher {
-  constructor() {
-    this.searchBuffer = {};
-  }
-
-  clearBuffer() {
-    this.searchBuffer = {};
-  }
-
-  match(searchTerms) {
-    const promises = [];
-    let documents = [];
-    searchTerms.forEach((term) => {
-      if (this.searchBuffer[term] !== undefined) documents = documents.concat(this.searchBuffer[term]);
-      else {
-        promises.push(
-          DbInterface
-            .getDocsByTerm({ term })
-            .then((docs) => {
-              // console.log(term, docs);
-              documents = documents.concat(docs);
-              this.searchBuffer[term] = docs;
-            }),
-        );
-      }
-    });
+  static match(searchTerms) {
     return Promise
-      .all(promises)
-      .then(() => documents.sort((a, b) => b.tf - a.tf));
+      .all(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
+      .then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
+      .then((expandedTerms) => (
+        Promise.all(
+          expandedTerms.map(
+            ({ term, tcr }) => (
+              DbInterface
+                .getDocsByTerm({ term })
+                .then((docs) => (
+                  docs.map(({ tf, ...doc }) => ({ ...doc, score: tcr * tf }))
+                ))
+            ),
+          ),
+        )
+      ))
+      .then((docss) => [].concat(...docss))
+      .then((docs) => docs.sort((a, b) => b.score - a.score));
   }
 }
 
-export default new TermMatcher();
+export default TermMatcher;
