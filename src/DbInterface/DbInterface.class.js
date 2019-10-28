@@ -59,7 +59,11 @@ class DbInterface {
   deleteFile({ oriFilePath }) {
     return (
       this.getFilePages(oriFilePath)
-        .then((docs) => Promise.all(docs.map(({ docId }) => this.deleteDoc({ docId }))))
+        .then((docs) => (
+          Promise
+            .all(docs.map(({ docId }) => this.deleteDoc({ docId })))
+            .then(() => docs)
+        ))
     );
   }
 

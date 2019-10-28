@@ -30,23 +30,36 @@ class ProcessDirector {
 
   static handlePptxDelete(pptxPath) {
     return DbInterface
-      .deleteFile(
-        { oriFilePath: pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) },
-      );
+      .deleteFile({ oriFilePath: pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) })
+      .then((docs) => ProcessDirector.handlePngDelete(docs));
   }
 
   static handleDocxDelete(docxPath) {
     return DbInterface
-      .deleteFile(
-        { oriFilePath: docxPath.substring(AppConfig.PATHS.DOCX_DIR.length + 1) },
-      );
+      .deleteFile({ oriFilePath: docxPath.substring(AppConfig.PATHS.DOCX_DIR.length + 1) })
+      .then((docs) => ProcessDirector.handlePngDelete(docs));
   }
 
   static handlePdfDelete(pdfPath) {
     return DbInterface
-      .deleteFile(
-        { oriFilePath: pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1) },
-      );
+      .deleteFile({ oriFilePath: pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1) })
+      .then((docs) => ProcessDirector.handlePngDelete(docs));
+  }
+
+  static handlePngDelete(docs) {
+    return Promise.all(
+      docs.map(
+        ({ docId }) => {
+          const pngPath = `${AppConfig.PATHS.PNG_DIR}/${docId}.png`;
+          if (fs.existsSync(pngPath)) {
+            return new Promise(
+              (resolve) => fs.unlink(pngPath, resolve),
+            );
+          }
+          return true;
+        },
+      ),
+    );
   }
 
   static reArrangePngs({ pages }) {
