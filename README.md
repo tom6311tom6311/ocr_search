@@ -29,7 +29,7 @@ The procedure goes as follows:
 5. Now the system will start to download files from your Dropbox app folder and process them. If there are new files needing to be considered or out-dated files needing to be changed or removed, just do it on the Dropbox app folder. The intelligent search system will periodically check for updates on the Dropbox app folder and keep in synchronized with it.
 6. Now the API server is also started. By default, the API server will be hosted on port ***7055***. This configuration can be changed by modifying `config/AppConfig.const.js`
 8. To run the system in background permanently, leave the current process by inserting `CTRL+C` and then type the following command:
-    - > forever start -c "node -r babel-register" src/runserver.script.js
+    - > forever start -c node_modules/.bin/babel-node src/runserver.script.js
 
 ## API Reference
 - Search Pages
