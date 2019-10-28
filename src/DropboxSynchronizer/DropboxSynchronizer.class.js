@@ -103,7 +103,7 @@ class DropboxSynchronizer {
           if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
           if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
         });
-        diff.deleted.pdf.forEach((pdfPath) => {
+        diff.deleted.pdf.forEach((pdfPath, idx) => {
           const pptxPath = PathConvert.pdf.toPptx(pdfPath);
           const docxPath = PathConvert.pdf.toDocx(pdfPath);
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
@@ -112,8 +112,11 @@ class DropboxSynchronizer {
             hasDiff = true;
             if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
             if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
+          } else {
+            diff.deleted.pdf[idx] = undefined;
           }
         });
+        diff.deleted.pdf = diff.deleted.pdf.filter((f) => f !== undefined);
         if (!hasDiff) {
           this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
         } else if (toDownload === 0) {

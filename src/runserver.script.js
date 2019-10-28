@@ -1,11 +1,8 @@
 import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
-import TypeConverter from './TypeConverter/TypeConverter.class';
-import TermExtractor from './TermExtractor/TermExtractor.class';
-import DbInterface from './DbInterface/DbInterface.class';
 import TermMatcher from './TermMatcher/TermMatcher.class';
-import PathConvert from './util/PathConvert.const';
+import ProcessDirector from './ProcessDirector/ProcessDirector.class';
 
 
 DropboxSynchronizer.startSync(
@@ -15,55 +12,19 @@ DropboxSynchronizer.startSync(
     ['added', 'modified']
       .forEach((diffMode) => {
         promises = promises.concat(
-          diff[diffMode]
-            .pptx
-            .map((pptxPath) => TypeConverter
-              .pptx2pdf(pptxPath)
-              .then(() => TypeConverter.pdf2png(PathConvert.pptx.toPdf(pptxPath)))
-              .then(() => TermExtractor.extractFromPdf(PathConvert.pptx.toPdf(pptxPath)))
-              .then(({ pages }) => DbInterface.updateFile({ pages }))),
-          diff[diffMode]
-            .docx
-            .map((docxPath) => TypeConverter
-              .docx2pdf(docxPath)
-              .then(() => TypeConverter.pdf2png(PathConvert.docx.toPdf(docxPath)))
-              .then(() => TermExtractor.extractFromPdf(PathConvert.docx.toPdf(docxPath)))
-              .then(({ pages }) => DbInterface.updateFile({ pages }))),
-          diff[diffMode]
-            .pdf
-            .map((pdfPath) => TypeConverter
-              .pdf2png(pdfPath)
-              .then(() => TermExtractor.extractFromPdf(pdfPath))
-              .then(({ pages }) => DbInterface.updateFile({ pages }))),
+          diff[diffMode].pptx.map(ProcessDirector.handlePptxUpdate),
+          diff[diffMode].docx.map(ProcessDirector.handleDocxUpdate),
+          diff[diffMode].pdf.map(ProcessDirector.handlePdfUpdate),
         );
       });
     promises = promises.concat(
-      diff
-        .deleted
-        .pptx
-        .map((pptxPath) => DbInterface
-          .deleteFile(
-            { oriFilePath: pptxPath.substring(AppConfig.PATHS.PPTX_DIR.length + 1) },
-          )),
-      diff
-        .deleted
-        .docx
-        .map((docxPath) => DbInterface
-          .deleteFile(
-            { oriFilePath: docxPath.substring(AppConfig.PATHS.DOCX_DIR.length + 1) },
-          )),
-      diff
-        .deleted
-        .pdf
-        .map((pdfPath) => DbInterface
-          .deleteFile(
-            { oriFilePath: pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1) },
-          )),
+      diff.deleted.pptx.map(ProcessDirector.handlePptxDelete),
+      diff.deleted.docx.map(ProcessDirector.handleDocxDelete),
+      diff.deleted.pdf.map(ProcessDirector.handlePdfDelete),
     );
     Promise
       .all(promises)
-      .then(cb)
-      .catch(cb);
+      .finally(cb);
   },
 );
 
