@@ -50,7 +50,7 @@ class TermExtractor {
                       docId: crypto.createHash('sha256').update(`${oriFilePath}_${pageIdx + 1}`).digest('hex'),
                       oriFilePath,
                       pageIdx: pageIdx + 1,
-                      imgPath: `${pngDirPath.substring(AppConfig.PATHS.PNG_DIR.length + 1)}/${path.basename(pngDirPath)}_${pageIdx + 1}.png`,
+                      imgPath: `${pngDirPath}/${path.basename(pngDirPath)}_${pageIdx + 1}.png`,
                       termFreqDict,
                     });
                     if (pages.length === rawPages.length) {

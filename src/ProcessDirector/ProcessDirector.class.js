@@ -1,3 +1,6 @@
+import fs from 'fs';
+import rmrf from 'rimraf';
+import path from 'path';
 import TypeConverter from '../TypeConverter/TypeConverter.class';
 import TermExtractor from '../TermExtractor/TermExtractor.class';
 import DbInterface from '../DbInterface/DbInterface.class';
@@ -21,6 +24,7 @@ class ProcessDirector {
     return TypeConverter
       .pdf2png(pdfPath)
       .then(() => TermExtractor.extractFromPdf(pdfPath))
+      .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
       .then(({ pages }) => DbInterface.updateFile({ pages }));
   }
 
@@ -43,6 +47,43 @@ class ProcessDirector {
       .deleteFile(
         { oriFilePath: pdfPath.substring(AppConfig.PATHS.PDF_DIR.length + 1) },
       );
+  }
+
+  static reArrangePngs({ pages }) {
+    const promises = [];
+    const pngDirPath = path.dirname(pages[0].imgPath);
+    const newPages = [];
+    pages.forEach(({ docId, imgPath, ...page }) => {
+      const newPath = `${AppConfig.PATHS.PNG_DIR}/${docId}.png`;
+      promises.push(
+        new Promise((resolve, reject) => {
+          fs.rename(imgPath, newPath, (err) => {
+            if (err) {
+              console.log(`ERROR [ProcessDirector]: ${err}`);
+              reject();
+            } else {
+              resolve();
+            }
+          });
+        }),
+      );
+      newPages.push({
+        docId,
+        ...page,
+        imgPath: `${docId}.png`,
+      });
+    });
+    return Promise
+      .all(promises)
+      .then(() => new Promise(
+        (resolve, reject) => {
+          rmrf(pngDirPath, (err) => {
+            if (err) reject(err);
+            else resolve();
+          });
+        },
+      ))
+      .then(() => new Promise((resolve) => resolve({ pages: newPages })));
   }
 }
 
