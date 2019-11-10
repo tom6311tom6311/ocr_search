@@ -11,7 +11,7 @@ A Node.js-based search system with following capabilities:
 2. Install `Python` v3.7
 3. Install python packages and `nltk >= 3.4.5` and `jieba >= 0.39`
 4. Install `libreoffice` command line tool (the `soffice` command)
-5. Install `graphicsmagick` and `ghostscript`
+5. Install `poppler` command line utilities for converting pdf files (the `pdftoppm` command will be used)
 6. Install latest `MongoDB`
 7. > sudo npm i -g forever
 8. clone the project

@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
 import { spawn } from 'child_process';
 import { PDFExtract } from 'pdf.js-extract';
@@ -47,10 +46,13 @@ class TermExtractor {
                     const termFreqDict = JSON.parse(buf.toString());
                     pages.push({
                       fileId,
-                      docId: crypto.createHash('sha256').update(`${oriFilePath}_${pageIdx + 1}`).digest('hex'),
+                      docId: crypto
+                        .createHash('sha256')
+                        .update(`${oriFilePath}-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}`)
+                        .digest('hex'),
                       oriFilePath,
                       pageIdx: pageIdx + 1,
-                      imgPath: `${pngDirPath}/${path.basename(pngDirPath)}_${pageIdx + 1}.png`,
+                      imgPath: `${pngDirPath}/p-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}.png`,
                       termFreqDict,
                     });
                     if (pages.length === rawPages.length) {
