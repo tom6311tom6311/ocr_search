@@ -41,23 +41,31 @@ class TermExtractor {
                     .filter((str) => str !== '')
                     .join(', ')
                     .toLowerCase();
+                  const bufs = [];
                   const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
                   tokenizingProcess.stdout.on('data', (buf) => {
-                    const termFreqDict = JSON.parse(buf.toString());
-                    pages.push({
-                      fileId,
-                      docId: crypto
-                        .createHash('sha256')
-                        .update(`${oriFilePath}-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}`)
-                        .digest('hex'),
-                      oriFilePath,
-                      pageIdx: pageIdx + 1,
-                      imgPath: `${pngDirPath}/p-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}.png`,
-                      termFreqDict,
-                    });
-                    if (pages.length === rawPages.length) {
-                      resolve({ pages });
-                      cb();
+                    bufs.push(buf);
+                  });
+                  tokenizingProcess.on('close', () => {
+                    try {
+                      const termFreqDict = JSON.parse(Buffer.concat(bufs));
+                      pages.push({
+                        fileId,
+                        docId: crypto
+                          .createHash('sha256')
+                          .update(`${oriFilePath}-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}`)
+                          .digest('hex'),
+                        oriFilePath,
+                        pageIdx: pageIdx + 1,
+                        imgPath: `${pngDirPath}/p-${(pageIdx + 1).toString().padStart(rawPages.length.toString().length, '0')}.png`,
+                        termFreqDict,
+                      });
+                      if (pages.length === rawPages.length) {
+                        resolve({ pages });
+                        cb();
+                      }
+                    } catch (err) {
+                      console.log(`ERROR [TermExtractor]: ${err}`);
                     }
                   });
                 });
