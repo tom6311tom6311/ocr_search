@@ -8,7 +8,7 @@ import PathConvert from '../util/PathConvert.const';
 import AppConfig from '../../config/AppConfig.const';
 
 /**
- * An class of static methods defining how specific type of file changes should be handled
+ * A class of static methods defining how specific type of file changes should be handled
  */
 class ProcessDirector {
   /**
