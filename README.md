@@ -31,6 +31,11 @@ The procedure goes as follows:
 8. To run the system in background permanently, leave the current process by inserting `CTRL+C` and then type the following command:
     - > forever start -c node_modules/.bin/babel-node src/runserver.script.js
 
+## How to Generate a Developer Document
+- The developer document is generated automatically based on function and class comments in the source code, with magics done by [documentation.js](https://github.com/documentationjs/documentation). So first we need to follow step 1 below to install documentation.js globally. Then whenever a functionality is created or modified, we update the corresponding comments and execute the command in step 2 to generate a new version of developer document, which is in markdown format and located at **`dev_doc.md`**
+1. > npm install -g documentation
+2. > npm run gendoc
+
 ## API Reference
 - Search Pages
   - Path: `/pages`

@@ -7,7 +7,8 @@
     "start": "./node_modules/.bin/babel-node src/runserver.script.js",
     "lint": "eslint \"**/*.js\"",
     "clean": "rm -rf data;",
-    "test": "jest"
+    "test": "jest",
+    "gendoc": "documentation build src/runserver.script.js -f md -o dev_doc.md"
   },
   "repository": {
     "type": "git",
