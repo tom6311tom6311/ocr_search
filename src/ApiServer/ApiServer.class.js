@@ -3,7 +3,7 @@ import ApiHandler from './ApiHandler.const';
 
 /**
  * An API server instance taking care of handling client requests
- * @param {object} app an express server instance
+ * @param {func} app an express server instance [>> ref <<](http://expressjs.com/en/api.html)
  */
 class ApiServer {
   constructor() {

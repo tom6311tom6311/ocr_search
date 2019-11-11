@@ -13,7 +13,7 @@ import PathConvert from '../util/PathConvert.const';
  * utility of this specific project, the remote repo should have 3 folders named "pptx", "docx", "pdf" under
  * its root directory and have the 3 corresponding type of files placed under these 3 folders, respectively. The
  * file hierarchy under these 3 folders can be customized by users with their own needs.
- * @param {object} dbx an instance handling connections with the remote Dropbox repo via Dropbox development API
+ * @param {Dropbox} dbx an instance handling connections with the remote Dropbox repo via Dropbox development API. [>> ref <<](https://dropbox.github.io/dropbox-sdk-js/Dropbox.html)
  * @param {number} syncTimeout a timeout ID indicating the next time of synchronization check
  */
 class DropboxSynchronizer {
