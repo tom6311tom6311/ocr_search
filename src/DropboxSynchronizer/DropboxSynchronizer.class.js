@@ -1,20 +1,31 @@
 import fs from 'fs';
 import path from 'path';
-import rmrf from 'rimraf';
 import { Dropbox } from 'dropbox';
 import fetch from 'isomorphic-fetch';
 import AppConfig from '../../config/AppConfig.const';
 import listDirRec from '../util/listDirRec.func';
 import PathConvert from '../util/PathConvert.const';
 
+/**
+ * An instance that keeps the local "data" folder up-to-date with a remote Dropbox repository by periodically
+ * checking for file updates on the remote repo and applying the changes to the local folder. The remote Dropbox
+ * folder is accessible via a Dropbox API token, defined in "config/AppConfig.const.js". Besides, due to the
+ * utility of this specific project, the remote repo should have 3 folders named "pptx", "docx", "pdf" under
+ * its root directory and have the 3 corresponding type of files placed under these 3 folders, respectively. The
+ * file hierarchy under these 3 folders can be customized by users with their own needs.
+ * @param {object} dbx an instance handling connections with the remote Dropbox repo via Dropbox development API
+ * @param {number} syncTimeout a timeout ID indicating the next time of synchronization check
+ */
 class DropboxSynchronizer {
   constructor() {
+    // create the Dropbox connection instance
     this.dbx = new Dropbox({
       fetch,
       accessToken: AppConfig.DROPBOX.ACCESS_TOKEN,
     });
     this.syncTimeout = null;
 
+    // if any of `data/pptx/`, `data/docx/`, `data/pdf/`, `data/png/` is not existed, create them
     [AppConfig.PATHS.PPTX_DIR, AppConfig.PATHS.DOCX_DIR, AppConfig.PATHS.PDF_DIR, AppConfig.PATHS.PNG_DIR]
       .forEach((dir) => {
         if (!fs.existsSync(dir)) {
@@ -23,116 +34,73 @@ class DropboxSynchronizer {
       });
   }
 
+  /**
+   * start periodical synchronization. The synchronization interval can be configured with "DROPBOX.SYNC_INTERVAL"
+   * in "config/AppConfig.const.js"
+   * @param {func} diffCallback a function argument that will be called whenever periodical sync is done. When
+   * this function is called, a "diff" object will be passed
+   *
+   * @example
+   * // diff object is in following structure
+   * {
+   *   added: {
+   *     pptx: [ added_pptx_paths ],
+   *     docx: [ added_docx_paths ],
+   *     pdf:  [ added_pdf_paths ],
+   *   },
+   *   modified: {
+   *     pptx: [ modified_pptx_paths ],
+   *     docx: [ modified_docx_paths ],
+   *     pdf:  [ modified_pdf_paths ],
+   *   },
+   *   deleted: {
+   *     pptx: [ deleted_pptx_paths ],
+   *     docx: [ deleted_docx_paths ],
+   *     pdf:  [ deleted_pdf_paths ],
+   *   },
+   * }
+   */
   startSync(diffCallback = () => {}) {
     const syncTask = () => {
       console.log('INFO [DropboxSynchronizer]: start sync...');
-      this.fetchDropboxFileLib((dropboxFileLib) => {
-        const localFileLib = this.fetchLocalFileLib();
-        const diff = this.diffFileLib(localFileLib, dropboxFileLib);
-        let toDownload = 0;
-        ['added', 'modified']
-          .forEach((diffMode) => {
-            diff[diffMode].pptx.forEach((pptxPath) => {
-              toDownload += 1;
-              if (!fs.existsSync(path.dirname(pptxPath))) {
-                fs.mkdirSync(path.dirname(pptxPath), { recursive: true });
-              }
-              this.downloadFile(pptxPath, () => {
-                toDownload -= 1;
-                if (toDownload === 0) {
-                  diffCallback(
-                    diff,
-                    () => {
-                      this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
-                    },
-                  );
-                }
+      this
+        .fetchDropboxFileLib()
+        .then((dropboxFileLib) => {
+          const localFileLib = this.fetchLocalFileLib();
+          // compare local file hierarchy with remote one and return the difference
+          const diff = this.diffFileLib(localFileLib, dropboxFileLib);
+          // for each file to be downloaded, create a download promise
+          const downloadPromises = [];
+          ['added', 'modified']
+            .forEach((diffMode) => {
+              ['pptx', 'docx', 'pdf'].forEach((fileType) => {
+                diff[diffMode][fileType].forEach((filePath) => {
+                  if (!fs.existsSync(path.dirname(filePath))) {
+                    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+                  }
+                  downloadPromises.push(this.downloadFile(filePath));
+                });
               });
             });
-            diff[diffMode].docx.forEach((docxPath) => {
-              toDownload += 1;
-              if (!fs.existsSync(path.dirname(docxPath))) {
-                fs.mkdirSync(path.dirname(docxPath), { recursive: true });
-              }
-              this.downloadFile(docxPath, () => {
-                toDownload -= 1;
-                if (toDownload === 0) {
-                  diffCallback(
-                    diff,
-                    () => {
-                      this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
-                    },
-                  );
-                }
-              });
-            });
-            diff[diffMode].pdf.forEach((pdfPath) => {
-              toDownload += 1;
-              if (!fs.existsSync(path.dirname(pdfPath))) {
-                fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
-              }
-              this.downloadFile(pdfPath, () => {
-                toDownload -= 1;
-                if (toDownload === 0) {
-                  diffCallback(
-                    diff,
-                    () => {
-                      this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
-                    },
-                  );
-                }
-              });
-            });
-          });
-        let hasDiff = toDownload !== 0;
-        diff.deleted.pptx.forEach((pptxPath) => {
-          console.log(`INFO [DropboxSynchronizer]: delete '${pptxPath}' and its related files`);
-          hasDiff = true;
-          const pdfPath = PathConvert.pptx.toPdf(pptxPath);
-          const pngDirPath = PathConvert.pptx.toPngDir(pptxPath);
-          if (fs.existsSync(pptxPath)) fs.unlinkSync(pptxPath);
-          if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-          if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
-        });
-        diff.deleted.docx.forEach((docxPath) => {
-          console.log(`INFO [DropboxSynchronizer]: delete '${docxPath}' and its related files`);
-          hasDiff = true;
-          const pdfPath = PathConvert.docx.toPdf(docxPath);
-          const pngDirPath = PathConvert.docx.toPngDir(docxPath);
-          if (fs.existsSync(docxPath)) fs.unlinkSync(docxPath);
-          if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-          if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
-        });
-        diff.deleted.pdf.forEach((pdfPath, idx) => {
-          const pptxPath = PathConvert.pdf.toPptx(pdfPath);
-          const docxPath = PathConvert.pdf.toDocx(pdfPath);
-          const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
-          if (!fs.existsSync(pptxPath) && !fs.existsSync(docxPath)) {
-            console.log(`INFO [DropboxSynchronizer]: delete '${pdfPath}' and its related files`);
-            hasDiff = true;
-            if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
-            if (fs.existsSync(pngDirPath)) rmrf.sync(pngDirPath);
-          } else {
-            diff.deleted.pdf[idx] = undefined;
-          }
-        });
-        diff.deleted.pdf = diff.deleted.pdf.filter((f) => f !== undefined);
-        if (!hasDiff) {
+          // delete out-dated files along with their related ones
+          const actualDeletion = this.fullDeletion(diff.deleted);
+          // return a promise chain that calls diffCallback when all files are downloaded
+          return Promise
+            .all(downloadPromises)
+            .then(() => diffCallback({ ...diff, deleted: actualDeletion }));
+        })
+        // after the promise returned by diffCallback is either resolved or rejected, start another sync cycle
+        .finally(() => {
           this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
-        } else if (toDownload === 0) {
-          diffCallback(
-            diff,
-            () => {
-              this.syncTimeout = setTimeout(syncTask, AppConfig.DROPBOX.SYNC_INTERVAL);
-            },
-          );
-        }
-      });
+        });
     };
 
     syncTask();
   }
 
+  /**
+   * Stop periodical synchronization by canceling the next-coming timeout
+   */
   stopSync() {
     if (this.syncTimeout !== null) {
       clearTimeout(this.syncTimeout);
@@ -140,8 +108,21 @@ class DropboxSynchronizer {
     }
   }
 
-  fetchDropboxFileLib(callback = () => {}, failCallback = () => {}) {
-    this.dbx.filesListFolder({
+  /**
+   * Fetch file structure under the remote Dropbox folder
+   * @returns {Promise<fileLib>} promise with a fileLib object
+   *
+   * @example
+   * // fileLib object is in following structure:
+   * {
+   *   pptx: { [ path ]: { path, lastModified }, ... }
+   *   docx: { [ path ]: { path, lastModified }, ... }
+   *   pdf:  { [ path ]: { path, lastModified }, ... }
+   * }
+   *
+   */
+  fetchDropboxFileLib() {
+    return this.dbx.filesListFolder({
       path: '',
       recursive: true,
     })
@@ -152,8 +133,10 @@ class DropboxSynchronizer {
           pdf: {},
         };
         entries
+          // take only files but not directories
           .filter((e) => e['.tag'] === 'file')
           .forEach(({ path_display: dropboxPath, server_modified: lastModified }) => {
+            // add a "data/" path prefix in order to match local file hierarchy
             if (dropboxPath.startsWith('/pptx/') && dropboxPath.endsWith('pptx')) {
               fileLib.pptx[`data${dropboxPath}`] = { path: `data${dropboxPath}`, lastModified: Date.parse(lastModified) };
             } else if (dropboxPath.startsWith('/docx/') && dropboxPath.endsWith('docx')) {
@@ -162,11 +145,26 @@ class DropboxSynchronizer {
               fileLib.pdf[`data${dropboxPath}`] = { path: `data${dropboxPath}`, lastModified: Date.parse(lastModified) };
             }
           });
-        callback(fileLib);
+        return fileLib;
       })
-      .catch(failCallback);
+      .catch((error) => {
+        console.log(`ERROR [DropboxSynchronizer]: ${error}`);
+      });
   }
 
+  /**
+   * Fetch local file structure under the "data" folder
+   * @returns {object} a fileLib object
+   *
+   * @example
+   * // fileLib object is in following structure
+   * {
+   *   pptx: { [ path ]: { path, lastModified }, ... }
+   *   docx: { [ path ]: { path, lastModified }, ... }
+   *   pdf:  { [ path ]: { path, lastModified }, ... }
+   * }
+   *
+   */
   fetchLocalFileLib() {
     const filePathList = listDirRec('data');
     const fileLib = {
@@ -185,9 +183,15 @@ class DropboxSynchronizer {
           fileLib.pdf[localPath] = { path: localPath, lastModified };
         }
       });
-    return (fileLib);
+    return fileLib;
   }
 
+  /**
+   * Compare 2 fileLibs each representing the file structure under a directory
+   * @param {object} oriFileLib the original fileLib. The baseline file structure to be compared with
+   * @param {object} chgFileLib the changed fileLib.
+   * @returns {object} the diff object showing the differences between the 2 directories
+   */
   diffFileLib(oriFileLib, chgFileLib) {
     const diff = {
       added: {
@@ -212,8 +216,10 @@ class DropboxSynchronizer {
           .entries(chgFileLib[type])
           .forEach(([chgPath, { lastModified }]) => {
             if (oriFileLib[type][chgPath] === undefined) {
+              // if a path shows in changed fileLib but not in original fileLib, its an added file
               diff.added[type].push(chgPath);
             } else if (lastModified > oriFileLib[type][chgPath].lastModified) {
+              // if a file shows in both fileLibs but has been modified more recently in the changed file lib, its a modified file
               diff.modified[type].push(chgPath);
             }
           });
@@ -224,6 +230,7 @@ class DropboxSynchronizer {
           .keys(oriFileLib[type])
           .forEach((oriPath) => {
             if (chgFileLib[type][oriPath] === undefined) {
+              // if a path shows in original fileLib but not in changed fileLib, its a deleted file
               diff.deleted[type].push(oriPath);
             }
           });
@@ -231,25 +238,54 @@ class DropboxSynchronizer {
     return diff;
   }
 
-  downloadFile(savePath, callback = () => {}) {
-    this
+  /**
+   * Download a file from Dropbox
+   * @param {string} savePath the local path save file, starting with "data/..."
+   * @returns {Promise<any>}
+   */
+  downloadFile(savePath) {
+    console.log(`INFO [DropboxSynchronizer]: downloading '${savePath}'`);
+    return this
       .dbx
       .filesDownload({ path: savePath.substring(savePath.indexOf('/')) })
-      .then(({ fileBinary }) => {
-        fs.writeFile(
-          savePath,
-          fileBinary,
-          (error) => {
-            if (error) {
-              console.log(`ERROR [DropboxSynchronizer]: ${error}`);
-            }
-            callback();
-          },
-        );
-      })
+      .then(({ fileBinary }) => fs.promises.writeFile(savePath, fileBinary))
       .catch((error) => {
         console.log(`ERROR [DropboxSynchronizer]: ${error}`);
       });
+  }
+
+  /**
+   * Perform deletion of files and their related ones based on the "deleted" part of "diff".
+   * @param {object} deletion the "deleted" part of "diff"
+   * @returns {object} actualDeletion, a deletion object describing the deleted files that are not generated from others
+   */
+  fullDeletion(deletion) {
+    const actualDeletion = {
+      pptx: [],
+      docx: [],
+      pdf: [],
+    };
+    // If a pptx or docx file is to be deleted, the pdf file generated from it should also be deleted
+    ['pptx', 'docx'].forEach((fileType) => {
+      deletion[fileType].forEach((filePath) => {
+        console.log(`INFO [DropboxSynchronizer]: delete '${filePath}' and its related files`);
+        const pdfPath = PathConvert[fileType].toPdf(filePath);
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+        actualDeletion[fileType].push(filePath);
+      });
+    });
+    deletion.pdf.forEach((pdfPath) => {
+      const pptxPath = PathConvert.pdf.toPptx(pdfPath);
+      const docxPath = PathConvert.pdf.toDocx(pdfPath);
+      // a pdf file with no corresponding pptx or docx file is not generated locally but uploaded by user
+      if (!fs.existsSync(pptxPath) && !fs.existsSync(docxPath)) {
+        console.log(`INFO [DropboxSynchronizer]: delete '${pdfPath}' and its related files`);
+        if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
+        actualDeletion.pdf.push(pdfPath);
+      }
+    });
+    return actualDeletion;
   }
 }
 
