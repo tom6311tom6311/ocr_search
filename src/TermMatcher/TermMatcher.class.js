@@ -1,11 +1,34 @@
 import DbInterface from '../DbInterface/DbInterface.class';
 
+/**
+ * An class handling term matching, which is the core functionality of search API
+ */
 class TermMatcher {
+  /**
+   * Match search terms with documents (pages)
+   * @param {Array<string>} searchTerms an array of tokenized search terms originated from user query
+   * @returns {Promise<Array<doc>>} promise with returned array of documents, sorted by correlation score between it and the user query
+   *
+   * @example
+   * // each doc is in following structure
+   * {
+   *   fileId,                    // an identifier generated from the raw file path (i.e. if "test.pdf" is generated from "test.docx", they share the same fileId)
+   *   docId,                     // an identifier of the document (page)
+   *   oriFilePath,               // original file path
+   *   pageIdx,                   // page index (starting from 1)
+   *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
+   *   score,                     // the correlation score between the document and the user query
+   * }
+   *
+   */
   static match(searchTerms) {
     return Promise
+      // expand each search term
       .all(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
+      // merge all the expanded term lists into a single list called "expandedTerms"
       .then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
       .then((expandedTerms) => (
+        // for each of the expanded terms, find its related documents and compute correlation scores
         Promise.all(
           expandedTerms.map(
             ({ term, tcr }) => (
@@ -18,7 +41,9 @@ class TermMatcher {
           ),
         )
       ))
+      // merge all lists of documents found into a single list
       .then((docss) => [].concat(...docss))
+      // sort the resulting documents by correlation score
       .then((docs) => docs.sort((a, b) => b.score - a.score));
   }
 }
