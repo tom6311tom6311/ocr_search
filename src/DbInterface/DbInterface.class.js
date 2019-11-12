@@ -72,10 +72,6 @@ class DbInterface {
    *   oriFilePath,               // original file path
    *   pageIdx,                   // page index (starting from 1)
    *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-   *   termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-   *     [term]: term_frequency,
-   *     ...
-   *   },
    * }
    *
    */
@@ -102,10 +98,6 @@ class DbInterface {
    *   oriFilePath,               // original file path
    *   pageIdx,                   // page index (starting from 1)
    *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-   *   termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-   *     [term]: term_frequency,
-   *     ...
-   *   },
    * }
    *
    */
@@ -223,10 +215,6 @@ class DbInterface {
    *   oriFilePath,               // original file path
    *   pageIdx,                   // page index (starting from 1)
    *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-   *   termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-   *     [term]: term_frequency,
-   *     ...
-   *   },
    * }
    *
    */
@@ -257,10 +245,6 @@ class DbInterface {
    *   oriFilePath,               // original file path
    *   pageIdx,                   // page index (starting from 1)
    *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-   *   termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-   *     [term]: term_frequency,
-   *     ...
-   *   },
    * }
    *
    */
@@ -287,10 +271,6 @@ class DbInterface {
    *   oriFilePath,               // original file path
    *   pageIdx,                   // page index (starting from 1)
    *   imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-   *   termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-   *     [term]: term_frequency,
-   *     ...
-   *   },
    *   tf,                        // term frequency (i.e. occurrences of this term in the document)
    * }
    *
