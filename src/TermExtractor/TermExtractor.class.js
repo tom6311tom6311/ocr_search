@@ -82,7 +82,7 @@ class TermExtractor {
                   tokenizingProcess.on('close', () => {
                     try {
                       // concatenate the buffers and try to parse it as a JSON string
-                      const termFreqDict = JSON.parse(Buffer.concat(bufs));
+                      const termFreqDict = JSON.parse(Buffer.concat(bufs).toString());
                       pages.push({
                         fileId,
                         docId: crypto
