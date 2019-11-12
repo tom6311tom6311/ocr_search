@@ -45,8 +45,8 @@ class ProcessDirector {
     return TypeConverter
       .pdf2png(pdfPath)
       .then(() => TermExtractor.extractFromPdf(pdfPath))
-      .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }));
-    // .then(({ pages }) => DbInterface.updateFile({ pages }));
+      .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
+      .then(({ pages }) => DbInterface.updateFile({ pages }));
   }
 
   /**
@@ -108,6 +108,12 @@ class ProcessDirector {
     );
   }
 
+  /**
+   * Move png files to "data/png/<docId>.png". This is to prevent leakage of folder structure to front-end
+   * @param {object} param
+   * @param {Array<Doc>} pages
+   * @returns {Promise<Array<Doc>>} pages with new png paths
+   */
   static reArrangePngs({ pages }) {
     const promises = [];
     const pngDirPath = path.dirname(pages[0].imgPath);
