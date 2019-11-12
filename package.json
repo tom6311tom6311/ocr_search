@@ -4,7 +4,7 @@
   "description": "A node application for extracting text from documents and images using OCR and providing text-based search API",
   "main": "src/runserver.script.js",
   "scripts": {
-    "start": "./node_modules/.bin/babel-node src/runserver.script.js",
+    "start": "./node_modules/.bin/babel-node --max_old_space_size=5120 src/runserver.script.js",
     "lint": "eslint \"**/*.js\"",
     "clean": "rm -rf data;",
     "test": "jest",
