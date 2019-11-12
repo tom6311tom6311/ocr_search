@@ -141,7 +141,9 @@ class DbInterface {
             ([term, tf]) => (
               this
                 .updateTermFreq({ docId, term, tf })
-                .then(() => this.updateTermCorrelations({ term }))
+                // workaround: disable term-correlation computation for now
+                // TODO: improve term-correlation computation
+                // .then(() => this.updateTermCorrelations({ term }))
             ),
           ),
         ))
