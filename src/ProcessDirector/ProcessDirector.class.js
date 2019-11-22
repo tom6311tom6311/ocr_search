@@ -46,7 +46,10 @@ class ProcessDirector {
       .pdf2png(pdfPath)
       .then(() => TermExtractor.extractFromPdf(pdfPath))
       .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
-      .then(({ pages }) => DbInterface.updateFile({ pages }));
+      .then(({ pages }) => DbInterface.updateFile({ pages }))
+      .catch((err) => {
+        console.log(`ERROR [ProcessDirector]: ${err}`);
+      });
   }
 
   /**
