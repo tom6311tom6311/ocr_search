@@ -33,7 +33,7 @@ const ApiHandler = [
               }));
             })
             .catch((error) => {
-              console.log(`ERROR [ApiHandler]: ${error}`);
+              console.log(`ERROR [ApiHandler.get.pages]: ${error}`);
               res.status(500).send({ message: 'internal server error' });
             });
         }

@@ -23,7 +23,7 @@ class ApiServer {
     this.app.listen(
       port,
       () => {
-        console.log(`INFO [ApiServer]: start listening on port ${port}`);
+        console.log(`INFO [ApiServer.start]: start listening on port ${port}`);
       },
     );
   }

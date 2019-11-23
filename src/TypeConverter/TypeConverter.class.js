@@ -25,7 +25,7 @@ class TypeConverter {
     return new Promise((resolve, reject) => {
       this.convertManager.registerTask({
         job: (cb) => {
-          console.log(`INFO [TypeConverter]: converting ${pptxPath} to pdf...`);
+          console.log(`INFO [TypeConverter.pptx2pdf]: converting ${pptxPath} to pdf...`);
           const pptxFile = fs.readFileSync(pptxPath);
           const pdfPath = PathConvert.pptx.toPdf(pptxPath);
 
@@ -46,14 +46,14 @@ class TypeConverter {
               resolve();
               cb();
             }, (err) => {
-              console.log(`ERROR [pptx2pdf]: ${err}`);
+              console.log(`ERROR [TypeConverter.pptx2pdf]: ${err}`);
               reject();
               cb();
             },
           );
         },
         failCallback: () => {
-          console.log(`ERROR [pptx2pdf]: timeout during converting file '${pptxPath}'`);
+          console.log(`ERROR [TypeConverter.pptx2pdf]: timeout during converting file '${pptxPath}'`);
           reject();
         },
       });
@@ -69,7 +69,7 @@ class TypeConverter {
     return new Promise((resolve, reject) => {
       this.convertManager.registerTask({
         job: (cb) => {
-          console.log(`INFO [TypeConverter]: converting ${docxPath} to pdf...`);
+          console.log(`INFO [TypeConverter.docx2pdf]: converting ${docxPath} to pdf...`);
           const docxFile = fs.readFileSync(docxPath);
           const pdfPath = PathConvert.docx.toPdf(docxPath);
 
@@ -90,14 +90,14 @@ class TypeConverter {
               resolve();
               cb();
             }, (err) => {
-              console.log(`ERROR [docx2pdf]: ${err}`);
+              console.log(`ERROR [TypeConverter.docx2pdf]: ${err}`);
               reject();
               cb();
             },
           );
         },
         failCallback: () => {
-          console.log(`ERROR [docx2pdf]: timeout during converting file '${docxPath}'`);
+          console.log(`ERROR [TypeConverter.docx2pdf]: timeout during converting file '${docxPath}'`);
           reject();
         },
       });
@@ -113,7 +113,7 @@ class TypeConverter {
     return new Promise((resolve, reject) => {
       this.convertManager.registerTask({
         job: (cb) => {
-          console.log(`INFO [TypeConverter]: converting ${pdfPath} to png...`);
+          console.log(`INFO [TypeConverter.pdf2png]: converting ${pdfPath} to png...`);
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
 
           // if the target png directory already exists, remove it
@@ -127,11 +127,11 @@ class TypeConverter {
           const pdfToPngProcess = spawn('pdftoppm', ['-png', pdfPath, `${pngDirPath}/p`]);
 
           pdfToPngProcess.stdout.on('data', (data) => {
-            console.log(`INFO [TypeConverter]: ${data}`);
+            console.log(`INFO [TypeConverter.pdf2png]: ${data}`);
           });
 
           pdfToPngProcess.stderr.on('data', (data) => {
-            console.log(`ERROR [TypeConverter]: ${data}`);
+            console.log(`ERROR [TypeConverter.pdf2png]: ${data}`);
           });
 
           pdfToPngProcess.on('close', (code) => {
@@ -142,22 +142,22 @@ class TypeConverter {
                 cb();
                 break;
               case 1: // error opening pdf file
-                console.log(`ERROR [TypeConverter]: error opening pdf file "${pdfPath}"`);
+                console.log(`ERROR [TypeConverter.pdf2png]: error opening pdf file "${pdfPath}"`);
                 reject();
                 cb();
                 break;
               case 2: // error opening an output file
-                console.log(`ERROR [TypeConverter]: error opening png files under "${pngDirPath}"`);
+                console.log(`ERROR [TypeConverter.pdf2png]: error opening png files under "${pngDirPath}"`);
                 reject();
                 cb();
                 break;
               case 3: // error related to pdf permissions
-                console.log(`ERROR [TypeConverter]: permission error with pdf file "${pdfPath}"`);
+                console.log(`ERROR [TypeConverter.pdf2png]: permission error with pdf file "${pdfPath}"`);
                 reject();
                 cb();
                 break;
               default: // other error
-                console.log('ERROR [TypeConverter]: unknown error');
+                console.log('ERROR [TypeConverter.pdf2png]: unknown error');
                 reject();
                 cb();
                 break;
@@ -165,7 +165,7 @@ class TypeConverter {
           });
         },
         failCallback: () => {
-          console.log(`ERROR [pdf2png]: timeout during converting file '${pdfPath}'`);
+          console.log(`ERROR [TypeConverter.pdf2png]: timeout during converting file '${pdfPath}'`);
           reject();
         },
       });

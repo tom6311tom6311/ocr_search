@@ -41,6 +41,8 @@ class TermExtractor {
     return new Promise((resolve, reject) => {
       this.taskManager.registerTask({
         job: (cb) => {
+          console.log(`ERROR [TermExtractor.extractFromPdf]: start extraction from ${pdfPath}`);
+
           const pptxPath = PathConvert.pdf.toPptx(pdfPath);
           const docxPath = PathConvert.pdf.toDocx(pdfPath);
           const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
@@ -56,7 +58,7 @@ class TermExtractor {
             {},
             (error, data) => {
               if (error) {
-                console.log(`ERROR [TermExtractor]: ${error}`);
+                console.log(`ERROR [TermExtractor.extractFromPdf]: ${error}`);
                 reject();
               } else {
                 const fileId = crypto.createHash('sha256').update(oriFilePath).digest('hex');
@@ -100,7 +102,7 @@ class TermExtractor {
                         cb();
                       }
                     } catch (err) {
-                      console.log(`ERROR [TermExtractor]: ${err}`);
+                      console.log(`ERROR [TermExtractor.extractFromPdf]: ${err}`);
                       reject();
                       cb();
                     }
@@ -111,7 +113,7 @@ class TermExtractor {
           );
         },
         failCallback: () => {
-          console.log(`ERROR [TermExtractor]: timeout during extracting '${pdfPath}'`);
+          console.log(`ERROR [TermExtractor.extractFromPdf]: timeout during extracting '${pdfPath}'`);
           reject();
         },
       });
@@ -138,13 +140,13 @@ class TermExtractor {
             cb();
           });
           tokenizingProcess.stdout.on('error', (error) => {
-            console.log(`ERROR [TermExtractor]: ${error}`);
+            console.log(`ERROR [TermExtractor.extractFromQuery]: ${error}`);
             reject();
             cb();
           });
         },
         failCallback: () => {
-          console.log(`ERROR [TermExtractor]: timeout during extracting query '${query}'`);
+          console.log(`ERROR [TermExtractor.extractFromQuery]: timeout during extracting query '${query}'`);
           reject();
         },
       });

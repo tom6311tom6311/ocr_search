@@ -63,7 +63,7 @@ class DropboxSynchronizer {
    */
   startSync(diffCallback = () => {}) {
     const syncTask = () => {
-      console.log('INFO [DropboxSynchronizer]: start sync...');
+      console.log('INFO [DropboxSynchronizer.startSync]: start sync...');
       this
         .fetchDropboxFileLib()
         .then((dropboxFileLib) => {
@@ -149,7 +149,7 @@ class DropboxSynchronizer {
         return fileLib;
       })
       .catch((error) => {
-        console.log(`ERROR [DropboxSynchronizer]: ${error}`);
+        console.log(`ERROR [DropboxSynchronizer.fetchDropboxFileLib]: ${error}`);
       });
   }
 
@@ -245,13 +245,13 @@ class DropboxSynchronizer {
    * @returns {Promise<any>}
    */
   downloadFile(savePath) {
-    console.log(`INFO [DropboxSynchronizer]: downloading '${savePath}'`);
+    console.log(`INFO [DropboxSynchronizer.downloadFile]: downloading '${savePath}'`);
     return this
       .dbx
       .filesDownload({ path: savePath.substring(savePath.indexOf('/')) })
       .then(({ fileBinary }) => fs.promises.writeFile(savePath, fileBinary))
       .catch((error) => {
-        console.log(`ERROR [DropboxSynchronizer]: ${error}`);
+        console.log(`ERROR [DropboxSynchronizer.downloadFile]: ${error}`);
       });
   }
 
@@ -269,7 +269,7 @@ class DropboxSynchronizer {
     // If a pptx or docx file is to be deleted, the pdf file generated from it should also be deleted
     ['pptx', 'docx'].forEach((fileType) => {
       deletion[fileType].forEach((filePath) => {
-        console.log(`INFO [DropboxSynchronizer]: delete '${filePath}' and its related files`);
+        console.log(`INFO [DropboxSynchronizer.fullDeletion]: delete '${filePath}' and its related files`);
         const pdfPath = PathConvert[fileType].toPdf(filePath);
         if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
         if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
@@ -281,7 +281,7 @@ class DropboxSynchronizer {
       const docxPath = PathConvert.pdf.toDocx(pdfPath);
       // a pdf file with no corresponding pptx or docx file is not generated locally but uploaded by user
       if (!fs.existsSync(pptxPath) && !fs.existsSync(docxPath)) {
-        console.log(`INFO [DropboxSynchronizer]: delete '${pdfPath}' and its related files`);
+        console.log(`INFO [DropboxSynchronizer.fullDeletion]: delete '${pdfPath}' and its related files`);
         if (fs.existsSync(pdfPath)) fs.unlinkSync(pdfPath);
         actualDeletion.pdf.push(pdfPath);
       }

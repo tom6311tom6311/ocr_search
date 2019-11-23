@@ -49,7 +49,7 @@ class ProcessDirector {
       .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
       .then(({ pages }) => DbInterface.updateFile({ pages }))
       .catch((err) => {
-        console.log(`ERROR [ProcessDirector]: ${err}`);
+        console.log(`ERROR [ProcessDirector.handlePdfUpdate]: ${err}`);
       });
   }
 
@@ -131,7 +131,7 @@ class ProcessDirector {
         new Promise((resolve, reject) => {
           fs.rename(imgPath, newPath, (err) => {
             if (err) {
-              console.log(`ERROR [ProcessDirector]: ${err}`);
+              console.log(`ERROR [ProcessDirector.reArrangePngs]: ${err}`);
               reject();
             } else {
               resolve();
