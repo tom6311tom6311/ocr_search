@@ -47,10 +47,7 @@ class ProcessDirector {
       .pdf2png(pdfPath)
       .then(() => TermExtractor.extractFromPdf(pdfPath))
       .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
-      .then(({ pages }) => DbInterface.updateFile({ pages }))
-      .catch((err) => {
-        console.log(`ERROR [ProcessDirector.handlePdfUpdate]: ${err}`);
-      });
+      .then(({ pages }) => DbInterface.updateFile({ pages }));
   }
 
   /**
@@ -107,9 +104,7 @@ class ProcessDirector {
             );
           }
           // if the png file does not exist, return a promise that will be resolved immediately
-          return new Promise(
-            (resolve) => resolve(true),
-          );
+          return Promise.resolve(true);
         },
       ),
     );
@@ -131,7 +126,7 @@ class ProcessDirector {
         new Promise((resolve, reject) => {
           fs.rename(imgPath, newPath, (err) => {
             if (err) {
-              console.log(`ERROR [ProcessDirector.reArrangePngs]: ${err}`);
+              console.log('ERROR [ProcessDirector.reArrangePngs]: ', err);
               reject();
             } else {
               resolve();
@@ -148,10 +143,12 @@ class ProcessDirector {
     return PromiseUtil
       .tolerateAllAndKeepResolved(promises)
       .then(() => new Promise(
-        (resolve, reject) => {
+        (resolve) => {
           rmrf(pngDirPath, (err) => {
-            if (err) reject(err);
-            else resolve();
+            if (err) {
+              console.log('ERROR [ProcessDirector.reArrangePngs]: ', err);
+            }
+            resolve();
           });
         },
       ))

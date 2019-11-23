@@ -123,16 +123,16 @@ class DropboxSynchronizer {
    *
    */
   fetchDropboxFileLib() {
+    const fileLib = {
+      pptx: {},
+      docx: {},
+      pdf: {},
+    };
     return this.dbx.filesListFolder({
       path: '',
       recursive: true,
     })
       .then(({ entries }) => {
-        const fileLib = {
-          pptx: {},
-          docx: {},
-          pdf: {},
-        };
         entries
           // take only files but not directories
           .filter((e) => e['.tag'] === 'file')
@@ -148,8 +148,10 @@ class DropboxSynchronizer {
           });
         return fileLib;
       })
-      .catch((error) => {
-        console.log(`ERROR [DropboxSynchronizer.fetchDropboxFileLib]: ${error}`);
+      .catch((err) => {
+        console.log('ERROR [DropboxSynchronizer.fetchDropboxFileLib]: ', err);
+        // still return best-effort fileLib result even if getting some error from list folder API
+        return Promise.resolve(fileLib);
       });
   }
 
@@ -242,16 +244,31 @@ class DropboxSynchronizer {
   /**
    * Download a file from Dropbox
    * @param {string} savePath the local path save file, starting with "data/..."
-   * @returns {Promise<any>}
+   * @returns {Promise<Boolean>} a download promise with a boolean flag indicating if the file is downloaded successfully
    */
   downloadFile(savePath) {
     console.log(`INFO [DropboxSynchronizer.downloadFile]: downloading '${savePath}'`);
     return this
       .dbx
       .filesDownload({ path: savePath.substring(savePath.indexOf('/')) })
-      .then(({ fileBinary }) => fs.promises.writeFile(savePath, fileBinary))
-      .catch((error) => {
-        console.log(`ERROR [DropboxSynchronizer.downloadFile]: ${error}`);
+      .then(
+        ({ fileBinary }) => (
+          new Promise(
+            (resolve, reject) => {
+              fs.writeFile(savePath, fileBinary, (err) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(true);
+                }
+              });
+            },
+          )
+        ),
+      )
+      .catch((err) => {
+        console.log('ERROR [DropboxSynchronizer.downloadFile]: ', err);
+        return Promise.resolve(false);
       });
   }
 

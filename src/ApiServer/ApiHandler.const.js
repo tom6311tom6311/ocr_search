@@ -32,8 +32,8 @@ const ApiHandler = [
                 pageList: pageList.map(({ oriFilePath, pageIdx, imgPath }) => ({ oriFilePath, pageIdx, imgPath })).slice(0, parseInt(maxReturn, 10) || AppConfig.API_SERVER.NUM_SEARCH_RETURN),
               }));
             })
-            .catch((error) => {
-              console.log(`ERROR [ApiHandler.get.pages]: ${error}`);
+            .catch((err) => {
+              console.log('ERROR [ApiHandler.get.pages]: ', err);
               res.status(500).send({ message: 'internal server error' });
             });
         }

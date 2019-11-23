@@ -19,42 +19,48 @@ class TypeConverter {
   /**
    * Conversion from pptx to pdf
    * @param {string} pptxPath path of the source pptx file
-   * @returns {Promise<any>}
+   * @returns {Promise<Boolean>} a conversion promise with a boolean flag indicating if the it succeeds
    */
   pptx2pdf(pptxPath) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.convertManager.registerTask({
         job: (cb) => {
           console.log(`INFO [TypeConverter.pptx2pdf]: converting ${pptxPath} to pdf...`);
-          const pptxFile = fs.readFileSync(pptxPath);
-          const pdfPath = PathConvert.pptx.toPdf(pptxPath);
+          try {
+            const pptxFile = fs.readFileSync(pptxPath);
+            const pdfPath = PathConvert.pptx.toPdf(pptxPath);
 
-          // if the target file already exists, remove it
-          if (fs.existsSync(pdfPath)) {
-            fs.unlinkSync(pdfPath);
+            // if the target file already exists, remove it
+            if (fs.existsSync(pdfPath)) {
+              fs.unlinkSync(pdfPath);
+            }
+
+            // if the directory where the target file should be placed does not exist, construct it
+            if (!fs.existsSync(path.dirname(pdfPath))) {
+              fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
+            }
+
+            // convert and save to the corresponding pdf path
+            toPdf(pptxFile)
+              .then((pdfFile) => {
+                fs.writeFileSync(pdfPath, pdfFile);
+                resolve(true);
+                cb();
+              })
+              .catch((err) => {
+                console.log('ERROR [TypeConverter.pptx2pdf]: ', err);
+                resolve(false);
+                cb();
+              });
+          } catch (err) {
+            console.log('ERROR [TypeConverter.pptx2pdf]: ', err);
+            resolve(false);
+            cb();
           }
-
-          // if the directory where the target file should be placed does not exist, construct it
-          if (!fs.existsSync(path.dirname(pdfPath))) {
-            fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
-          }
-
-          // convert and save to the corresponding pdf path
-          toPdf(pptxFile).then(
-            (pdfFile) => {
-              fs.writeFileSync(pdfPath, pdfFile);
-              resolve();
-              cb();
-            }, (err) => {
-              console.log(`ERROR [TypeConverter.pptx2pdf]: ${err}`);
-              reject();
-              cb();
-            },
-          );
         },
         failCallback: () => {
           console.log(`ERROR [TypeConverter.pptx2pdf]: timeout during converting file '${pptxPath}'`);
-          reject();
+          resolve(false);
         },
       });
     });
@@ -63,42 +69,48 @@ class TypeConverter {
   /**
    * Conversion from docx to pdf
    * @param {string} docxPath path of the source docx file
-   * @returns {Promise<any>}
+   * @returns {Promise<Boolean>} a conversion promise with a boolean flag indicating if the it succeeds
    */
   docx2pdf(docxPath) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.convertManager.registerTask({
         job: (cb) => {
           console.log(`INFO [TypeConverter.docx2pdf]: converting ${docxPath} to pdf...`);
-          const docxFile = fs.readFileSync(docxPath);
-          const pdfPath = PathConvert.docx.toPdf(docxPath);
+          try {
+            const docxFile = fs.readFileSync(docxPath);
+            const pdfPath = PathConvert.docx.toPdf(docxPath);
 
-          // if the target file already exists, remove it
-          if (fs.existsSync(pdfPath)) {
-            fs.unlinkSync(pdfPath);
+            // if the target file already exists, remove it
+            if (fs.existsSync(pdfPath)) {
+              fs.unlinkSync(pdfPath);
+            }
+
+            // if the directory where the target file should be placed does not exist, construct it
+            if (!fs.existsSync(path.dirname(pdfPath))) {
+              fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
+            }
+
+            // convert and save to the corresponding pdf path
+            toPdf(docxFile)
+              .then((pdfFile) => {
+                fs.writeFileSync(pdfPath, pdfFile);
+                resolve(true);
+                cb();
+              })
+              .catch((err) => {
+                console.log('ERROR [TypeConverter.docx2pdf]: ', err);
+                resolve(false);
+                cb();
+              });
+          } catch (err) {
+            console.log('ERROR [TypeConverter.docx2pdf]: ', err);
+            resolve(false);
+            cb();
           }
-
-          // if the directory where the target file should be placed does not exist, construct it
-          if (!fs.existsSync(path.dirname(pdfPath))) {
-            fs.mkdirSync(path.dirname(pdfPath), { recursive: true });
-          }
-
-          // convert and save to the corresponding pdf path
-          toPdf(docxFile).then(
-            (pdfFile) => {
-              fs.writeFileSync(pdfPath, pdfFile);
-              resolve();
-              cb();
-            }, (err) => {
-              console.log(`ERROR [TypeConverter.docx2pdf]: ${err}`);
-              reject();
-              cb();
-            },
-          );
         },
         failCallback: () => {
           console.log(`ERROR [TypeConverter.docx2pdf]: timeout during converting file '${docxPath}'`);
-          reject();
+          resolve(false);
         },
       });
     });
@@ -110,63 +122,69 @@ class TypeConverter {
    * @returns {Promise<any>}
    */
   pdf2png(pdfPath) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.convertManager.registerTask({
         job: (cb) => {
           console.log(`INFO [TypeConverter.pdf2png]: converting ${pdfPath} to png...`);
-          const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
+          try {
+            const pngDirPath = PathConvert.pdf.toPngDir(pdfPath);
 
-          // if the target png directory already exists, remove it
-          if (fs.existsSync(pngDirPath)) {
-            rmrf.sync(pngDirPath);
-          }
-          // construct the target png directory
-          fs.mkdirSync(pngDirPath, { recursive: true });
-
-          // call the "pdftoppm" command line tool to perform type conversion
-          const pdfToPngProcess = spawn('pdftoppm', ['-png', pdfPath, `${pngDirPath}/p`]);
-
-          pdfToPngProcess.stdout.on('data', (data) => {
-            console.log(`INFO [TypeConverter.pdf2png]: ${data}`);
-          });
-
-          pdfToPngProcess.stderr.on('data', (data) => {
-            console.log(`ERROR [TypeConverter.pdf2png]: ${data}`);
-          });
-
-          pdfToPngProcess.on('close', (code) => {
-            // verify conversion result by checking exist code
-            switch (code) {
-              case 0: // no error
-                resolve();
-                cb();
-                break;
-              case 1: // error opening pdf file
-                console.log(`ERROR [TypeConverter.pdf2png]: error opening pdf file "${pdfPath}"`);
-                reject();
-                cb();
-                break;
-              case 2: // error opening an output file
-                console.log(`ERROR [TypeConverter.pdf2png]: error opening png files under "${pngDirPath}"`);
-                reject();
-                cb();
-                break;
-              case 3: // error related to pdf permissions
-                console.log(`ERROR [TypeConverter.pdf2png]: permission error with pdf file "${pdfPath}"`);
-                reject();
-                cb();
-                break;
-              default: // other error
-                console.log('ERROR [TypeConverter.pdf2png]: unknown error');
-                reject();
-                cb();
-                break;
+            // if the target png directory already exists, remove it
+            if (fs.existsSync(pngDirPath)) {
+              rmrf.sync(pngDirPath);
             }
-          });
+            // construct the target png directory
+            fs.mkdirSync(pngDirPath, { recursive: true });
+
+            // call the "pdftoppm" command line tool to perform type conversion
+            const pdfToPngProcess = spawn('pdftoppm', ['-png', pdfPath, `${pngDirPath}/p`]);
+
+            pdfToPngProcess.stdout.on('data', (data) => {
+              console.log(`INFO [TypeConverter.pdf2png]: ${data}`);
+            });
+
+            pdfToPngProcess.stderr.on('data', (data) => {
+              console.log(`WARNING [TypeConverter.pdf2png]: ${data}`);
+            });
+
+            pdfToPngProcess.on('exit', (code) => {
+              // verify conversion result by checking exist code
+              switch (code) {
+                case 0: // no error
+                  resolve(true);
+                  cb();
+                  break;
+                case 1: // error opening pdf file
+                  console.log(`ERROR [TypeConverter.pdf2png]: error opening pdf file "${pdfPath}"`);
+                  resolve(false);
+                  cb();
+                  break;
+                case 2: // error opening an output file
+                  console.log(`ERROR [TypeConverter.pdf2png]: error opening png files under "${pngDirPath}"`);
+                  resolve(false);
+                  cb();
+                  break;
+                case 3: // error related to pdf permissions
+                  console.log(`ERROR [TypeConverter.pdf2png]: permission error with pdf file "${pdfPath}"`);
+                  resolve(false);
+                  cb();
+                  break;
+                default: // other error
+                  console.log(`ERROR [TypeConverter.pdf2png]: child process ends with unknown exit code: ${code}`);
+                  resolve(false);
+                  cb();
+                  break;
+              }
+            });
+          } catch (err) {
+            console.log('ERROR [TypeConverter.pdf2png]: ', err);
+            resolve(false);
+            cb();
+          }
         },
         failCallback: () => {
           console.log(`ERROR [TypeConverter.pdf2png]: timeout during converting file '${pdfPath}'`);
-          reject();
+          resolve(false);
         },
       });
     });

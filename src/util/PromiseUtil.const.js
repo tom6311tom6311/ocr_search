@@ -5,7 +5,7 @@
 const PromiseUtil = {
   /**
    * Tolerate rejection of a promise by turning rejection into a resolved form (probably with error in failed cases)
-   * @param {Promise<Any>} promise the input promise to be tolerated
+   * @param {Promise<any>} promise the input promise to be tolerated
    * @returns {Promise<Result>} a new promise that will always be resolved
    *
    * @example
@@ -24,8 +24,8 @@ const PromiseUtil = {
   /**
    * Equivalent to a "Promise.all" that will be resolved when ALL sub-promises are either resolved or rejected.
    * The rejection of sub-promises will be omitted while only resolved values will be brought back as arguments of the callback function.
-   * @param {Array<Promise<Any>>} array of sub-promises to be executed
-   * @returns {Promise<Array<Any>>} a promise with values of all the resolved sub-promises
+   * @param {Array<Promise<any>>} array of sub-promises to be executed
+   * @returns {Promise<Array<any>>} a promise with values of all the resolved sub-promises
    */
   tolerateAllAndKeepResolved: (promises) => (
     Promise

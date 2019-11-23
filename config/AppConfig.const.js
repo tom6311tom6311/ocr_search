@@ -12,7 +12,8 @@ const AppConfig = {
     TIMEOUT: 10 * 60 * 1000,
   },
   TEXT_EXTRACT: {
-    TIMEOUT: 5 * 60 * 1000,
+    PDF_TIMEOUT: 5 * 60 * 1000,
+    QUERY_TIMEOUT: 5 * 1000,
   },
   API_SERVER: {
     PORT: 7055,

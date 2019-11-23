@@ -13,8 +13,8 @@ class DbInterface {
       .then((dbClient) => {
         this.dbClient = dbClient;
       })
-      .catch((error) => {
-        console.error(`ERROR [DbInterface]: ${error}`);
+      .catch((err) => {
+        console.error('ERROR [DbInterface]: ', err);
       });
   }
 
@@ -83,6 +83,10 @@ class DbInterface {
         .collection(AppConfig.MONGO_DB.COLLECTION_NAME.DOCS)
         .find({ oriFilePath })
         .toArray()
+        .catch((err) => {
+          console.log('ERROR [DbInterface.getFilePages]: ', err);
+          return Promise.resolve([]);
+        })
     );
   }
 
@@ -192,7 +196,11 @@ class DbInterface {
             { term1: terms[0], term2: terms[1] },
             { $set: { term1: terms[0], term2: terms[1], tcr } },
             { upsert: true },
-          ),
+          )
+          .catch((err) => {
+            console.log('ERROR [DbInterface.updateTermCorrelation]: ', err);
+            return Promise.resolve();
+          }),
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_CORRELATIONS)
@@ -200,7 +208,11 @@ class DbInterface {
             { term1: terms[1], term2: terms[0] },
             { $set: { term1: terms[1], term2: terms[0], tcr } },
             { upsert: true },
-          ),
+          )
+          .catch((err) => {
+            console.log('ERROR [DbInterface.updateTermCorrelation]: ', err);
+            return Promise.resolve();
+          }),
       ])
     );
   }
@@ -231,6 +243,10 @@ class DbInterface {
           { $set: { docId, ...params } },
           { upsert: true },
         )
+        .catch((err) => {
+          console.log('ERROR [DbInterface.updateDoc]: ', err);
+          return Promise.resolve();
+        })
     );
   }
 
@@ -257,6 +273,10 @@ class DbInterface {
         .db(AppConfig.MONGO_DB.DB_NAME)
         .collection(AppConfig.MONGO_DB.COLLECTION_NAME.DOCS)
         .findOne({ docId })
+        .catch((err) => {
+          console.log('ERROR [DbInterface.getDocById]: ', err);
+          return Promise.resolve(null);
+        })
     );
   }
 
@@ -264,7 +284,7 @@ class DbInterface {
    * Get all documents (pages) containing a term, also return the term frequency of this term in each document
    * @param {object} param
    * @param {string} param.term
-   * @returns {Promise<DocWithTf>}
+   * @returns {Promise<Array<DocWithTf>>}
    *
    * @example
    * // the "DocWithTf" is in following structure
@@ -299,6 +319,10 @@ class DbInterface {
               )
           ),
         )
+        .catch((err) => {
+          console.log('ERROR [DbInterface.getDocsByTerm]: ', err);
+          return Promise.resolve([]);
+        })
     );
   }
 
@@ -314,11 +338,19 @@ class DbInterface {
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.DOCS)
-          .deleteMany({ docId }),
+          .deleteMany({ docId })
+          .catch((err) => {
+            console.log('ERROR [DbInterface.deleteDoc]: ', err);
+            return Promise.resolve();
+          }),
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
-          .deleteMany({ docId }),
+          .deleteMany({ docId })
+          .catch((err) => {
+            console.log('ERROR [DbInterface.deleteDoc]: ', err);
+            return Promise.resolve();
+          }),
       ])
     );
   }
@@ -341,6 +373,10 @@ class DbInterface {
           { $set: { docId, term, tf } },
           { upsert: true },
         )
+        .catch((err) => {
+          console.log('ERROR [DbInterface.updateTermFreq]: ', err);
+          return Promise.resolve();
+        })
     );
   }
 
@@ -358,6 +394,10 @@ class DbInterface {
         .find({ docId })
         .toArray()
         .then((entries) => entries.map(({ term }) => term))
+        .catch((err) => {
+          console.log('ERROR [DbInterface.getTermsByDoc]: ', err);
+          return Promise.resolve([]);
+        })
     );
   }
 
@@ -377,6 +417,10 @@ class DbInterface {
         .sort({ tcr: -1 })
         .toArray()
         .then((entries) => entries.map(({ term2, tcr }) => ({ term: term2, tcr }).slice(0, num)))
+        .catch((err) => {
+          console.log('ERROR [DbInterface.findClosestTerms]: ', err);
+          return Promise.resolve([]);
+        })
     );
   }
 
@@ -393,12 +437,20 @@ class DbInterface {
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
           .find({ term: term1 })
-          .toArray(),
+          .toArray()
+          .catch((err) => {
+            console.log('ERROR [DbInterface.computeTermCorrelation]: ', err);
+            return Promise.resolve([]);
+          }),
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
           .find({ term: term2 })
-          .toArray(),
+          .toArray()
+          .catch((err) => {
+            console.log('ERROR [DbInterface.computeTermCorrelation]: ', err);
+            return Promise.resolve([]);
+          }),
       ])
       .then(([entries1, entries2]) => {
         let accumScore = 0;
@@ -409,6 +461,10 @@ class DbInterface {
         const length1 = Math.sqrt(entries1.reduce((total, { tf }) => (total + tf * tf), 0)) || 1;
         const length2 = Math.sqrt(entries2.reduce((total, { tf }) => (total + tf * tf), 0)) || 1;
         return accumScore / length1 / length2;
+      })
+      .catch((err) => {
+        console.log('ERROR [DbInterface.computeTermCorrelation]: ', err);
+        return Promise.resolve(0);
       });
   }
 }
