@@ -9,7 +9,7 @@ const AppConfig = {
     PNG_DIR: `${DATA_DIR}/png`,
   },
   TYPE_CONVERT: {
-    TIMEOUT: 150 * 1000,
+    TIMEOUT: 10 * 60 * 1000,
   },
   TEXT_EXTRACT: {
     TIMEOUT: 5 * 60 * 1000,
