@@ -5,6 +5,7 @@ import fetch from 'isomorphic-fetch';
 import AppConfig from '../../config/AppConfig.const';
 import listDirRec from '../util/listDirRec.func';
 import PathConvert from '../util/PathConvert.const';
+import PromiseUtil from '../util/PromiseUtil.const';
 
 /**
  * An instance that keeps the local "data" folder up-to-date with a remote Dropbox repository by periodically
@@ -85,8 +86,8 @@ class DropboxSynchronizer {
           // delete out-dated files along with their related ones
           const actualDeletion = this.fullDeletion(diff.deleted);
           // return a promise chain that calls diffCallback when all files are downloaded
-          return Promise
-            .all(downloadPromises)
+          return PromiseUtil
+            .tolerateAllAndKeepResolved(downloadPromises)
             .then(() => diffCallback({ ...diff, deleted: actualDeletion }));
         })
         // after the promise returned by diffCallback is either resolved or rejected, start another sync cycle

@@ -6,6 +6,7 @@ import TermExtractor from '../TermExtractor/TermExtractor.class';
 import DbInterface from '../DbInterface/DbInterface.class';
 import PathConvert from '../util/PathConvert.const';
 import AppConfig from '../../config/AppConfig.const';
+import PromiseUtil from '../util/PromiseUtil.const';
 
 /**
  * A class of static methods defining how specific type of file changes should be handled
@@ -96,7 +97,7 @@ class ProcessDirector {
    */
   static handlePngDelete(docs) {
     // for each DB doc(page) record, compose png path from it and then delete the png file
-    return Promise.all(
+    return PromiseUtil.tolerateAllAndKeepResolved(
       docs.map(
         ({ docId }) => {
           const pngPath = `${AppConfig.PATHS.PNG_DIR}/${docId}.png`;
@@ -105,7 +106,10 @@ class ProcessDirector {
               (resolve) => fs.unlink(pngPath, resolve),
             );
           }
-          return true;
+          // if the png file does not exist, return a promise that will be resolved immediately
+          return new Promise(
+            (resolve) => resolve(true),
+          );
         },
       ),
     );
@@ -141,8 +145,8 @@ class ProcessDirector {
         imgPath: `${docId}.png`,
       });
     });
-    return Promise
-      .all(promises)
+    return PromiseUtil
+      .tolerateAllAndKeepResolved(promises)
       .then(() => new Promise(
         (resolve, reject) => {
           rmrf(pngDirPath, (err) => {

@@ -2,10 +2,11 @@ import AppConfig from '../config/AppConfig.const';
 import ApiServer from './ApiServer/ApiServer.class';
 import DropboxSynchronizer from './DropboxSynchronizer/DropboxSynchronizer.class';
 import ProcessDirector from './ProcessDirector/ProcessDirector.class';
+import PromiseUtil from './util/PromiseUtil.const';
 
 // start synchronization with the target Dropbox repository
 // when encountering an added, modified or deleted file, trigger handling processes correspondingly
-// when all handling processes finished, the resolved "Promise.all" will trigger the next cycle of synchronization
+// when all handling processes finished, the resolved promise will trigger the next cycle of synchronization
 DropboxSynchronizer.startSync(
   (diff) => {
     let promises = [];
@@ -22,7 +23,7 @@ DropboxSynchronizer.startSync(
       diff.deleted.docx.map(ProcessDirector.handleDocxDelete),
       diff.deleted.pdf.map(ProcessDirector.handlePdfDelete),
     );
-    return Promise.all(promises);
+    return PromiseUtil.tolerateAllAndKeepResolved(promises);
   },
 );
 

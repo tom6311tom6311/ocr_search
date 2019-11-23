@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import AppConfig from '../../config/AppConfig.const';
+import PromiseUtil from '../util/PromiseUtil.const';
 
 /**
  * An instance handling creat, read, update, delete (CRUD) operations on the Mongo database
@@ -54,7 +55,7 @@ class DbInterface {
    *
    */
   updateFile({ pages }) {
-    return Promise.all(
+    return PromiseUtil.tolerateAllAndKeepResolved(
       pages.map((page) => this.updatePage(page)),
     );
   }
@@ -105,8 +106,8 @@ class DbInterface {
     return (
       this.getFilePages(oriFilePath)
         .then((docs) => (
-          Promise
-            .all(docs.map(({ docId }) => this.deleteDoc({ docId })))
+          PromiseUtil
+            .tolerateAllAndKeepResolved(docs.map(({ docId }) => this.deleteDoc({ docId })))
             .then(() => docs)
         ))
     );
@@ -136,7 +137,7 @@ class DbInterface {
     return (
       this
         .updateDoc({ docId, ...params })
-        .then(() => Promise.all(
+        .then(() => PromiseUtil.tolerateAllAndKeepResolved(
           Object.entries(termFreqDict).map(
             ([term, tf]) => (
               this
@@ -161,12 +162,12 @@ class DbInterface {
       this.getDocsByTerm({ term })
         .then((docs) => (
           // for each document, get all of its terms
-          Promise.all(docs.map(({ docId }) => this.getTermsByDoc({ docId })))
+          PromiseUtil.tolerateAllAndKeepResolved(docs.map(({ docId }) => this.getTermsByDoc({ docId })))
         ))
         // concatenate the resulted term lists into a single list
         // filter out the term itself and deduplicate repeated terms
         .then((termss) => [...new Set([].concat(...termss).filter(((t) => t !== term)))])
-        .then((terms) => Promise.all(terms.map(
+        .then((terms) => PromiseUtil.tolerateAllAndKeepResolved(terms.map(
           // compute and update term correlation
           (t) => this.computeTermCorrelation(t, term)
             .then((tcr) => this.updateTermCorrelation({ terms: [t, term], tcr })),
@@ -183,7 +184,7 @@ class DbInterface {
    */
   updateTermCorrelation({ terms, tcr }) {
     return (
-      Promise.all([
+      PromiseUtil.tolerateAllAndKeepResolved([
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_CORRELATIONS)
@@ -286,15 +287,16 @@ class DbInterface {
         .toArray()
         .then(
           (entries) => (
-            Promise.all(
-              entries.map(
-                ({ docId, tf }) => (
-                  this
-                    .getDocById({ docId })
-                    .then((doc) => ({ ...doc, tf }))
+            PromiseUtil
+              .tolerateAllAndKeepResolved(
+                entries.map(
+                  ({ docId, tf }) => (
+                    this
+                      .getDocById({ docId })
+                      .then((doc) => ({ ...doc, tf }))
+                  ),
                 ),
-              ),
-            )
+              )
           ),
         )
     );
@@ -308,7 +310,7 @@ class DbInterface {
    */
   deleteDoc({ docId }) {
     return (
-      Promise.all([
+      PromiseUtil.tolerateAllAndKeepResolved([
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.DOCS)
@@ -385,8 +387,8 @@ class DbInterface {
    * @returns {Promise<number>}
    */
   computeTermCorrelation(term1, term2) {
-    return Promise
-      .all([
+    return PromiseUtil
+      .tolerateAllAndKeepResolved([
         this.dbClient
           .db(AppConfig.MONGO_DB.DB_NAME)
           .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)

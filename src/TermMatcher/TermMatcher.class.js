@@ -1,4 +1,5 @@
 import DbInterface from '../DbInterface/DbInterface.class';
+import PromiseUtil from '../util/PromiseUtil.const';
 
 /**
  * An class handling term matching, which is the core functionality of search API
@@ -23,8 +24,8 @@ class TermMatcher {
    */
   static match(searchTerms) {
     // for each search term, find its related documents and compute correlation score
-    return Promise
-      .all(
+    return PromiseUtil
+      .tolerateAllAndKeepResolved(
         searchTerms.map(
           (term) => (
             DbInterface
@@ -54,14 +55,14 @@ class TermMatcher {
     // workaround: disable term-correlation computation for now
     // TODO: improve term-correlation computation
 
-    // return Promise
+    // return PromiseUtil
     //   // expand each search term
-    //   .all(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
+    //   .tolerateAllAndKeepResolved(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
     //   // merge all the expanded term lists into a single list called "expandedTerms"
     //   .then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
     //   .then((expandedTerms) => (
     //     // for each of the expanded terms, find its related documents and compute correlation scores
-    //     Promise.all(
+    //     PromiseUtil.tolerateAllAndKeepResolved(
     //       expandedTerms.map(
     //         ({ term, tcr }) => (
     //           DbInterface
