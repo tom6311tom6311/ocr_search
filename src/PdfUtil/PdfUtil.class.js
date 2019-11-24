@@ -117,8 +117,8 @@ class PdfUtil {
           pageNum = parseInt(metaText.substring(metaText.indexOf('Pages:') + 6), 10) || pageNum;
         });
 
-        pdfInfoProcess.stderr.on('data', (data) => {
-          console.log(`WARNING [PdfUtil.getNumPages]: ${data}`);
+        pdfInfoProcess.stderr.on('data', (err) => {
+          console.log('WARNING [PdfUtil.getNumPages]: ', err.toString());
         });
 
         pdfInfoProcess.on('exit', () => {
@@ -150,7 +150,7 @@ class PdfUtil {
         });
 
         pdfToTextProcess.stderr.on('data', (err) => {
-          console.log('WARNING [PdfUtil.getPageContent]: ', err);
+          console.log('WARNING [PdfUtil.getPageContent]: ', err.toString());
         });
 
         pdfToTextProcess.on('exit', () => {

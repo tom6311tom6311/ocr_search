@@ -143,8 +143,8 @@ class TypeConverter {
               console.log(`INFO [TypeConverter.pdf2png]: ${data}`);
             });
 
-            pdfToPngProcess.stderr.on('data', (data) => {
-              console.log(`WARNING [TypeConverter.pdf2png]: ${data}`);
+            pdfToPngProcess.stderr.on('data', (err) => {
+              console.log('WARNING [TypeConverter.pdf2png]: ', err.toString());
             });
 
             pdfToPngProcess.on('exit', (code) => {
