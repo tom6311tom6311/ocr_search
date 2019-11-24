@@ -14,8 +14,8 @@ const PathConvert = {
   pptx: {
     /**
      * Convert pptx path to pdf path
-     * @param {string} pptxPath the input pptx file path
-     * @returns {string} the output pdf file path
+     * @param {String} pptxPath the input pptx file path
+     * @returns {String} the output pdf file path
      */
     toPdf: (pptxPath) => (
       pptxPath
@@ -24,8 +24,8 @@ const PathConvert = {
     ),
     /**
      * Convert pptx path to png directory path
-     * @param {string} pptxPath the input pptx file path
-     * @returns {string} the output png directory path
+     * @param {String} pptxPath the input pptx file path
+     * @returns {String} the output png directory path
      */
     toPngDir: (pptxPath) => (
       pptxPath
@@ -39,8 +39,8 @@ const PathConvert = {
   docx: {
     /**
      * Convert docx path to pdf path
-     * @param {string} docxPath the input docx file path
-     * @returns {string} the output pdf file path
+     * @param {String} docxPath the input docx file path
+     * @returns {String} the output pdf file path
      */
     toPdf: (docxPath) => (
       docxPath
@@ -49,8 +49,8 @@ const PathConvert = {
     ),
     /**
      * Convert docx path to png directory path
-     * @param {string} docxPath the input docx file path
-     * @returns {string} the output png directory path
+     * @param {String} docxPath the input docx file path
+     * @returns {String} the output png directory path
      */
     toPngDir: (docxPath) => (
       docxPath
@@ -64,8 +64,8 @@ const PathConvert = {
   pdf: {
     /**
      * Convert pdf path to pptx path
-     * @param {string} pdfPath the input pdf file path
-     * @returns {string} the output pptx file path
+     * @param {String} pdfPath the input pdf file path
+     * @returns {String} the output pptx file path
      */
     toPptx: (pdfPath) => (
       pdfPath
@@ -74,8 +74,8 @@ const PathConvert = {
     ),
     /**
      * Convert pdf path to docx path
-     * @param {string} pdfPath the input pdf file path
-     * @returns {string} the output docx file path
+     * @param {String} pdfPath the input pdf file path
+     * @returns {String} the output docx file path
      */
     toDocx: (pdfPath) => (
       pdfPath
@@ -84,8 +84,8 @@ const PathConvert = {
     ),
     /**
      * Convert pdf path to png directory path
-     * @param {string} pdfPath the input pdf file path
-     * @returns {string} the output png directory path
+     * @param {String} pdfPath the input pdf file path
+     * @returns {String} the output png directory path
      */
     toPngDir: (pdfPath) => (
       pdfPath
@@ -99,8 +99,8 @@ const PathConvert = {
   pngDir: {
     /**
      * Convert png directory path to pptx path
-     * @param {string} pngDirPath the input png directory path
-     * @returns {string} the output pptx path
+     * @param {String} pngDirPath the input png directory path
+     * @returns {String} the output pptx path
      */
     toPptx: (pngDirPath) => (
       `${
@@ -110,8 +110,8 @@ const PathConvert = {
     ),
     /**
      * Convert png directory path to docx path
-     * @param {string} pngDirPath the input png directory path
-     * @returns {string} the output docx path
+     * @param {String} pngDirPath the input png directory path
+     * @returns {String} the output docx path
      */
     toDocx: (pngDirPath) => (
       `${
@@ -121,8 +121,8 @@ const PathConvert = {
     ),
     /**
      * Convert png directory path to pdf path
-     * @param {string} pngDirPath the input png directory path
-     * @returns {string} the output pdf path
+     * @param {String} pngDirPath the input png directory path
+     * @returns {String} the output pdf path
      */
     toPdf: (pngDirPath) => (
       `${

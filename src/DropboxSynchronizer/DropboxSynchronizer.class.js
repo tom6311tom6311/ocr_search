@@ -243,7 +243,7 @@ class DropboxSynchronizer {
 
   /**
    * Download a file from Dropbox
-   * @param {string} savePath the local path save file, starting with "data/..."
+   * @param {String} savePath the local path save file, starting with "data/..."
    * @returns {Promise<Boolean>} a download promise with a boolean flag indicating if the file is downloaded successfully
    */
   downloadFile(savePath) {

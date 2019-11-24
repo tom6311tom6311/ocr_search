@@ -33,7 +33,7 @@
     "isomorphic-fetch": "^2.2.1",
     "mongodb": "^3.3.3",
     "office-to-pdf": "^4.0.0",
-    "pdf.js-extract": "^0.1.3",
+    "progress": "^2.0.3",
     "rimraf": "^3.0.0"
   },
   "devDependencies": {

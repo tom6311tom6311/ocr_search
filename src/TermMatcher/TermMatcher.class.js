@@ -7,7 +7,7 @@ import PromiseUtil from '../util/PromiseUtil.const';
 class TermMatcher {
   /**
    * Match search terms with documents (pages)
-   * @param {Array<string>} searchTerms an array of tokenized search terms originated from user query
+   * @param {Array<String>} searchTerms an array of tokenized search terms originated from user query
    * @returns {Promise<Array<doc>>} promise with returned array of documents, sorted by correlation score between it and the user query
    *
    * @example

@@ -18,7 +18,7 @@ class TypeConverter {
 
   /**
    * Conversion from pptx to pdf
-   * @param {string} pptxPath path of the source pptx file
+   * @param {String} pptxPath path of the source pptx file
    * @returns {Promise<Boolean>} a conversion promise with a boolean flag indicating if the it succeeds
    */
   pptx2pdf(pptxPath) {
@@ -68,7 +68,7 @@ class TypeConverter {
 
   /**
    * Conversion from docx to pdf
-   * @param {string} docxPath path of the source docx file
+   * @param {String} docxPath path of the source docx file
    * @returns {Promise<Boolean>} a conversion promise with a boolean flag indicating if the it succeeds
    */
   docx2pdf(docxPath) {
@@ -118,7 +118,7 @@ class TypeConverter {
 
   /**
    * Conversion from pdf to png
-   * @param {string} pdfPath path of the source pdf file
+   * @param {String} pdfPath path of the source pdf file
    * @returns {Promise<any>}
    */
   pdf2png(pdfPath) {

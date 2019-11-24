@@ -62,7 +62,7 @@ class DbInterface {
 
   /**
    * Given original file's path, get all the pages (documents) belonging to it
-   * @param {string} oriFilePath original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
+   * @param {String} oriFilePath original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
    * @returns {Promise<Array<Doc>>}
    *
    * @example
@@ -92,7 +92,7 @@ class DbInterface {
 
   /**
    * Given original file's path, delete all its belonging pages (documents)
-   * @param {string} oriFilePath original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
+   * @param {String} oriFilePath original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
    * @returns {Promise<Array<Doc>>}
    *
    * @example
@@ -157,7 +157,7 @@ class DbInterface {
 
   /**
    * Compute and update correlations between a term and all others
-   * @param {string} term
+   * @param {String} term
    * @returns {Promise<any>}
    */
   updateTermCorrelations({ term }) {
@@ -182,7 +182,7 @@ class DbInterface {
   /**
    * Update correlation between 2 terms
    * @param {object} param
-   * @param {Array<string>} param.terms [term1, term2]
+   * @param {Array<String>} param.terms [term1, term2]
    * @param {number} param.tcr correlation between term1 and term2
    * @returns {Promise<any>}
    */
@@ -253,7 +253,7 @@ class DbInterface {
   /**
    * Get a document (page) by its docId
    * @param {object} param
-   * @param {string} param.docId
+   * @param {String} param.docId
    * @returns {Promise<Doc>}
    *
    * @example
@@ -283,7 +283,7 @@ class DbInterface {
   /**
    * Get all documents (pages) containing a term, also return the term frequency of this term in each document
    * @param {object} param
-   * @param {string} param.term
+   * @param {String} param.term
    * @returns {Promise<Array<DocWithTf>>}
    *
    * @example
@@ -329,7 +329,7 @@ class DbInterface {
   /**
    * Delete a document (page) by its docId
    * @param {object} param
-   * @param {string} param.docId
+   * @param {String} param.docId
    * @returns {Promise<any>}
    */
   deleteDoc({ docId }) {
@@ -358,8 +358,8 @@ class DbInterface {
   /**
    * Update term frequency (i.e. occurrences of a term in a document)
    * @param {object} param
-   * @param {string} param.docId
-   * @param {string} param.term
+   * @param {String} param.docId
+   * @param {String} param.term
    * @param {number} param.tf term frequency
    * @returns {Promise<any>}
    */
@@ -383,8 +383,8 @@ class DbInterface {
   /**
    * Get all terms occurring in a document
    * @param {object} param
-   * @param {string} param.docId
-   * @returns {Promise<Array<string>>} promise with a list of terms
+   * @param {String} param.docId
+   * @returns {Promise<Array<String>>} promise with a list of terms
    */
   getTermsByDoc({ docId }) {
     return (
@@ -404,7 +404,7 @@ class DbInterface {
   /**
    * Given a term ,find the terms with highest correlation to it
    * @param {object} param
-   * @param {string} param.term
+   * @param {String} param.term
    * @param {number} num maximum number of closest terms to return
    * @returns {Promise<Array<{term, tcr}>>} promise with a list of terms with term correlation (tcr)
    */
@@ -426,8 +426,8 @@ class DbInterface {
 
   /**
    * Compute correlation between 2 terms. The computation is based on cosine similarity metric
-   * @param {string} term1
-   * @param {string} term2
+   * @param {String} term1
+   * @param {String} term2
    * @returns {Promise<number>}
    */
   computeTermCorrelation(term1, term2) {

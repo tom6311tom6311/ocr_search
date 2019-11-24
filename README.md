@@ -42,7 +42,7 @@ The procedure goes as follows:
   - Method: `GET`
   - URL Params:
     - Required
-      - `searchTerm=<string>`
+      - `searchTerm=<String>`
         - The search term inserted by user in order to find related pages
     - Optional
       - `maxReturn=<positive integer>`
@@ -52,7 +52,7 @@ The procedure goes as follows:
   - Success Response:
     - Code: `200 OK`
     - Content:
-      - `pageList: [{fileName:<string>, pageIdx:<string>, imgPath:<string>}, ...]`
+      - `pageList: [{fileName:<String>, pageIdx:<String>, imgPath:<String>}, ...]`
         - A list of JSON objects indicating the matched slide pages, with correlation from high to low.
         - `imgPath` in each `pageList` item can be used to locate the snapshot of corresponding slide page in the `Get Page Image` API
   - Error Response:

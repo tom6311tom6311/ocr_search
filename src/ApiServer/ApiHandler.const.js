@@ -1,7 +1,7 @@
 import express from 'express';
-import TermMatcher from '../TermMatcher/TermMatcher.class';
-import TermExtractor from '../TermExtractor/TermExtractor.class';
 import AppConfig from '../../config/AppConfig.const';
+import TermMatcher from '../TermMatcher/TermMatcher.class';
+import Tokenizer from '../Tokenizer/Tokenizer.class';
 
 /**
  * A list of API handlers defining how server should response given a http request.
@@ -22,10 +22,11 @@ const ApiHandler = [
         } else if (maxReturn !== undefined && !new RegExp(/^[1-9]\d*$/).test(maxReturn)) {
           res.status(400).send({ message: 'maxReturn should be a positive integer' });
         } else {
-          // extract terms from query and then match them with pages in the DB.
+          // tokenize terms from query and then match them with pages in the DB.
           // Return a list of related pages, sorted by correlation (from high to low)
-          TermExtractor
-            .extractFromQuery(query)
+          Tokenizer
+            .tokenize(query)
+            .then((termFreqDict) => Object.keys(termFreqDict))
             .then((searchTerms) => TermMatcher.match(searchTerms))
             .then((pageList) => {
               res.end(JSON.stringify({

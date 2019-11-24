@@ -47,7 +47,7 @@ lemmatizer = WordNetLemmatizer()
 eng_terms = [lemmatizer.lemmatize(lemmatizer.lemmatize(w, pos="v")) for w in eng_words]
 
 # segment chinese text
-jieba.set_dictionary('model/dict.txt.big')
+# jieba.set_dictionary('model/dict.txt.big')
 chi_text = ''.join([c for c in chi_text if u'\u4e00' <= c <= u'\u9fff'])
 chi_terms = [w for w in jieba.cut_for_search(chi_text)]
 

@@ -2,11 +2,11 @@ import fs from 'fs';
 import rmrf from 'rimraf';
 import path from 'path';
 import TypeConverter from '../TypeConverter/TypeConverter.class';
-import TermExtractor from '../TermExtractor/TermExtractor.class';
 import DbInterface from '../DbInterface/DbInterface.class';
 import PathConvert from '../util/PathConvert.const';
 import AppConfig from '../../config/AppConfig.const';
 import PromiseUtil from '../util/PromiseUtil.const';
+import PdfUtil from '../PdfUtil/PdfUtil.class';
 
 /**
  * A class of static methods defining how specific type of file changes should be handled
@@ -14,7 +14,7 @@ import PromiseUtil from '../util/PromiseUtil.const';
 class ProcessDirector {
   /**
    * Handle creation or modification of a pptx file
-   * @param {string} pptxPath local path of the updated pptx file
+   * @param {String} pptxPath local path of the updated pptx file
    * @returns {Promise<any>}
    */
   static handlePptxUpdate(pptxPath) {
@@ -26,7 +26,7 @@ class ProcessDirector {
 
   /**
    * Handle creation or modification of a docx file
-   * @param {string} docxPath local path of the updated docx file
+   * @param {String} docxPath local path of the updated docx file
    * @returns {Promise<any>}
    */
   static handleDocxUpdate(docxPath) {
@@ -38,21 +38,21 @@ class ProcessDirector {
 
   /**
    * Handle creation or modification of a pdf file
-   * @param {string} pdfPath local path of the updated pdf file
+   * @param {String} pdfPath local path of the updated pdf file
    * @returns {Promise<any>}
    */
   static handlePdfUpdate(pdfPath) {
     // convert to png first; then extract terms from pdf and re-arrange png files by docId; finally update pages to DB
     return TypeConverter
       .pdf2png(pdfPath)
-      .then(() => TermExtractor.extractFromPdf(pdfPath))
+      .then(() => PdfUtil.extractTerms(pdfPath))
       .then(({ pages }) => ProcessDirector.reArrangePngs({ pages }))
       .then(({ pages }) => DbInterface.updateFile({ pages }));
   }
 
   /**
    * Handle deletion of a pptx file
-   * @param {string} pptxPath local path of the deleted pptx file
+   * @param {String} pptxPath local path of the deleted pptx file
    * @returns {Promise<any>}
    */
   static handlePptxDelete(pptxPath) {
@@ -64,7 +64,7 @@ class ProcessDirector {
 
   /**
    * Handle deletion of a docx file
-   * @param {string} docxPath local path of the deleted docx file
+   * @param {String} docxPath local path of the deleted docx file
    * @returns {Promise<any>}
    */
   static handleDocxDelete(docxPath) {
@@ -76,7 +76,7 @@ class ProcessDirector {
 
   /**
    * Handle deletion of a pdf file
-   * @param {string} pdfPath local path of the deleted pdf file
+   * @param {String} pdfPath local path of the deleted pdf file
    * @returns {Promise<any>}
    */
   static handlePdfDelete(pdfPath) {
@@ -89,7 +89,7 @@ class ProcessDirector {
   /**
    * Handle deletion of png files related to a specific bunch of documents
    * , which usually represents pages of a deleted file
-   * @param {string} docs DB records representing pages of the deleted file
+   * @param {String} docs DB records representing pages of the deleted file
    * @returns {Promise<any>}
    */
   static handlePngDelete(docs) {
@@ -152,7 +152,7 @@ class ProcessDirector {
           });
         },
       ))
-      .then(() => new Promise((resolve) => resolve({ pages: newPages })));
+      .then(() => Promise.resolve({ pages: newPages }));
   }
 }
 
