@@ -109,6 +109,7 @@ class TermExtractor {
                           }
                         } catch (err) {
                           console.log('ERROR [TermExtractor.extractFromPdf]: ', err);
+                          console.log('ERROR [TermExtractor.extractFromPdf]: data returned from tokenizing process: ', Buffer.concat(bufs).toString());
                           // return best-effort result of pages
                           resolve({ pages });
                           cb();
