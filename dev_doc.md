@@ -29,107 +29,114 @@
         -   [Parameters][25]
     -   [fullDeletion][26]
         -   [Parameters][27]
--   [PathConvert][28]
-    -   [pptx][29]
-        -   [toPdf][30]
-            -   [Parameters][31]
-        -   [toPngDir][32]
-            -   [Parameters][33]
-    -   [docx][34]
-        -   [toPdf][35]
-            -   [Parameters][36]
-        -   [toPngDir][37]
-            -   [Parameters][38]
-    -   [pdf][39]
-        -   [toPptx][40]
-            -   [Parameters][41]
-        -   [toDocx][42]
-            -   [Parameters][43]
-        -   [toPngDir][44]
-            -   [Parameters][45]
-    -   [pngDir][46]
-        -   [toPptx][47]
-            -   [Parameters][48]
-        -   [toDocx][49]
-            -   [Parameters][50]
-        -   [toPdf][51]
-            -   [Parameters][52]
--   [ProcessDirector][53]
-    -   [handlePptxUpdate][54]
-        -   [Parameters][55]
-    -   [handleDocxUpdate][56]
+-   [ProcessDirector][28]
+    -   [handlePptxUpdate][29]
+        -   [Parameters][30]
+    -   [handleDocxUpdate][31]
+        -   [Parameters][32]
+    -   [handlePdfUpdate][33]
+        -   [Parameters][34]
+    -   [handlePptxDelete][35]
+        -   [Parameters][36]
+    -   [handleDocxDelete][37]
+        -   [Parameters][38]
+    -   [handlePdfDelete][39]
+        -   [Parameters][40]
+    -   [handlePngDelete][41]
+        -   [Parameters][42]
+    -   [reArrangePngs][43]
+        -   [Parameters][44]
+-   [TypeConverter][45]
+    -   [Parameters][46]
+    -   [pptx2pdf][47]
+        -   [Parameters][48]
+    -   [docx2pdf][49]
+        -   [Parameters][50]
+    -   [pdf2png][51]
+        -   [Parameters][52]
+-   [DbInterface][53]
+    -   [Parameters][54]
+    -   [connectDb][55]
+    -   [updateFile][56]
         -   [Parameters][57]
-    -   [handlePdfUpdate][58]
-        -   [Parameters][59]
-    -   [handlePptxDelete][60]
-        -   [Parameters][61]
-    -   [handleDocxDelete][62]
+        -   [Examples][58]
+    -   [getFilePages][59]
+        -   [Parameters][60]
+        -   [Examples][61]
+    -   [deleteFile][62]
         -   [Parameters][63]
-    -   [handlePdfDelete][64]
-        -   [Parameters][65]
-    -   [handlePngDelete][66]
-        -   [Parameters][67]
-    -   [reArrangePngs][68]
+        -   [Examples][64]
+    -   [updatePage][65]
+        -   [Parameters][66]
+        -   [Examples][67]
+    -   [updateTermCorrelations][68]
         -   [Parameters][69]
--   [TypeConverter][70]
-    -   [Parameters][71]
-    -   [pptx2pdf][72]
+    -   [updateTermCorrelation][70]
+        -   [Parameters][71]
+    -   [updateDoc][72]
         -   [Parameters][73]
-    -   [docx2pdf][74]
-        -   [Parameters][75]
-    -   [pdf2png][76]
-        -   [Parameters][77]
--   [TermExtractor][78]
-    -   [Parameters][79]
-    -   [extractFromPdf][80]
-        -   [Parameters][81]
-        -   [Examples][82]
-    -   [extractFromQuery][83]
+        -   [Examples][74]
+    -   [getDocById][75]
+        -   [Parameters][76]
+        -   [Examples][77]
+    -   [getDocsByTerm][78]
+        -   [Parameters][79]
+        -   [Examples][80]
+    -   [deleteDoc][81]
+        -   [Parameters][82]
+    -   [updateTermFreq][83]
         -   [Parameters][84]
--   [DbInterface][85]
-    -   [Parameters][86]
-    -   [connectDb][87]
-    -   [updateFile][88]
-        -   [Parameters][89]
-        -   [Examples][90]
-    -   [getFilePages][91]
-        -   [Parameters][92]
-        -   [Examples][93]
-    -   [deleteFile][94]
-        -   [Parameters][95]
-        -   [Examples][96]
-    -   [updatePage][97]
-        -   [Parameters][98]
-        -   [Examples][99]
-    -   [updateTermCorrelations][100]
-        -   [Parameters][101]
-    -   [updateTermCorrelation][102]
-        -   [Parameters][103]
-    -   [updateDoc][104]
-        -   [Parameters][105]
-        -   [Examples][106]
-    -   [getDocById][107]
-        -   [Parameters][108]
-        -   [Examples][109]
-    -   [getDocsByTerm][110]
-        -   [Parameters][111]
-        -   [Examples][112]
-    -   [deleteDoc][113]
-        -   [Parameters][114]
-    -   [updateTermFreq][115]
-        -   [Parameters][116]
-    -   [getTermsByDoc][117]
-        -   [Parameters][118]
-    -   [findClosestTerms][119]
-        -   [Parameters][120]
-    -   [computeTermCorrelation][121]
+    -   [getTermsByDoc][85]
+        -   [Parameters][86]
+    -   [findClosestTerms][87]
+        -   [Parameters][88]
+    -   [computeTermCorrelation][89]
+        -   [Parameters][90]
+-   [PathConvert][91]
+    -   [pptx][92]
+        -   [toPdf][93]
+            -   [Parameters][94]
+        -   [toPngDir][95]
+            -   [Parameters][96]
+    -   [docx][97]
+        -   [toPdf][98]
+            -   [Parameters][99]
+        -   [toPngDir][100]
+            -   [Parameters][101]
+    -   [pdf][102]
+        -   [toPptx][103]
+            -   [Parameters][104]
+        -   [toDocx][105]
+            -   [Parameters][106]
+        -   [toPngDir][107]
+            -   [Parameters][108]
+    -   [pngDir][109]
+        -   [toPptx][110]
+            -   [Parameters][111]
+        -   [toDocx][112]
+            -   [Parameters][113]
+        -   [toPdf][114]
+            -   [Parameters][115]
+-   [PdfUtil][116]
+    -   [Parameters][117]
+    -   [extractTerms][118]
+        -   [Parameters][119]
+        -   [Examples][120]
+    -   [getNumPages][121]
         -   [Parameters][122]
--   [PromiseUtil][123]
-    -   [tolerate][124]
-        -   [Parameters][125]
-        -   [Examples][126]
-    -   [tolerateAllAndKeepResolved][127]
+    -   [getPageContent][123]
+        -   [Parameters][124]
+-   [Tokenizer][125]
+    -   [Parameters][126]
+    -   [tokenize][127]
         -   [Parameters][128]
+        -   [Examples][129]
+-   [PromiseUtil][130]
+    -   [tolerate][131]
+        -   [Parameters][132]
+        -   [Examples][133]
+    -   [tolerateAllAndKeepResolved][134]
+        -   [Parameters][135]
 
 ## ApiServer
 
@@ -137,7 +144,7 @@ An API server instance taking care of handling client requests
 
 ### Parameters
 
--   `app` **func** an express server instance [>> ref &lt;&lt;][129]
+-   `app` **func** an express server instance [>> ref &lt;&lt;][136]
 
 ### start
 
@@ -145,7 +152,7 @@ start the API server
 
 #### Parameters
 
--   `port` **[number][130]** the port on which the API server will listen
+-   `port` **[number][137]** the port on which the API server will listen
 
 ## ApiHandler
 
@@ -170,7 +177,7 @@ Match search terms with documents (pages)
 
 #### Parameters
 
--   `searchTerms` **[Array][131]&lt;[string][132]>** an array of tokenized search terms originated from user query
+-   `searchTerms` **[Array][138]&lt;[String][139]>** an array of tokenized search terms originated from user query
 
 #### Examples
 
@@ -186,7 +193,7 @@ Match search terms with documents (pages)
 }
 ```
 
-Returns **[Promise][133]&lt;[Array][131]&lt;doc>>** promise with returned array of documents, sorted by correlation score between it and the user query
+Returns **[Promise][140]&lt;[Array][138]&lt;doc>>** promise with returned array of documents, sorted by correlation score between it and the user query
 
 ## DropboxSynchronizer
 
@@ -199,8 +206,8 @@ file hierarchy under these 3 folders can be customized by users with their own n
 
 ### Parameters
 
--   `dbx` **Dropbox** an instance handling connections with the remote Dropbox repo via Dropbox development API. [>> ref &lt;&lt;][134]
--   `syncTimeout` **[number][130]** a timeout ID indicating the next time of synchronization check
+-   `dbx` **Dropbox** an instance handling connections with the remote Dropbox repo via Dropbox development API. [>> ref &lt;&lt;][141]
+-   `syncTimeout` **[number][137]** a timeout ID indicating the next time of synchronization check
 
 ### startSync
 
@@ -254,7 +261,7 @@ Fetch file structure under the remote Dropbox folder
 }
 ```
 
-Returns **[Promise][133]&lt;fileLib>** promise with a fileLib object
+Returns **[Promise][140]&lt;fileLib>** promise with a fileLib object
 
 ### fetchLocalFileLib
 
@@ -271,7 +278,7 @@ Fetch local file structure under the "data" folder
 }
 ```
 
-Returns **[object][135]** a fileLib object
+Returns **[object][142]** a fileLib object
 
 ### diffFileLib
 
@@ -279,10 +286,10 @@ Compare 2 fileLibs each representing the file structure under a directory
 
 #### Parameters
 
--   `oriFileLib` **[object][135]** the original fileLib. The baseline file structure to be compared with
--   `chgFileLib` **[object][135]** the changed fileLib.
+-   `oriFileLib` **[object][142]** the original fileLib. The baseline file structure to be compared with
+-   `chgFileLib` **[object][142]** the changed fileLib.
 
-Returns **[object][135]** the diff object showing the differences between the 2 directories
+Returns **[object][142]** the diff object showing the differences between the 2 directories
 
 ### downloadFile
 
@@ -290,9 +297,9 @@ Download a file from Dropbox
 
 #### Parameters
 
--   `savePath` **[string][132]** the local path save file, starting with "data/..."
+-   `savePath` **[String][139]** the local path save file, starting with "data/..."
 
-Returns **[Promise][133]&lt;[Boolean][136]>** a download promise with a boolean flag indicating if the file is downloaded successfully
+Returns **[Promise][140]&lt;[Boolean][143]>** a download promise with a boolean flag indicating if the file is downloaded successfully
 
 ### fullDeletion
 
@@ -300,133 +307,9 @@ Perform deletion of files and their related ones based on the "deleted" part of 
 
 #### Parameters
 
--   `deletion` **[object][135]** the "deleted" part of "diff"
+-   `deletion` **[object][142]** the "deleted" part of "diff"
 
-Returns **[object][135]** actualDeletion, a deletion object describing the deleted files that are not generated from others
-
-## PathConvert
-
-A bunch of file path conversion methods. In this project, the raw files uploaded by user
-will be located in "data/pptx", "data/docx", "data/pdf", according to their types. However,
-in order to extract text and generate page images for front-end displaying purpose, we
-follow a general flow of file type conversion: `pptx/docx --> pdf --> png`. The `PathCovert`
-module helps us to locate different format of the same raw file given a file path.
-
-### pptx
-
-Path convesion with input file type being pptx
-
-#### toPdf
-
-Convert pptx path to pdf path
-
-##### Parameters
-
--   `pptxPath` **[string][132]** the input pptx file path
-
-Returns **[string][132]** the output pdf file path
-
-#### toPngDir
-
-Convert pptx path to png directory path
-
-##### Parameters
-
--   `pptxPath` **[string][132]** the input pptx file path
-
-Returns **[string][132]** the output png directory path
-
-### docx
-
-Path convesion with input file type being docx
-
-#### toPdf
-
-Convert docx path to pdf path
-
-##### Parameters
-
--   `docxPath` **[string][132]** the input docx file path
-
-Returns **[string][132]** the output pdf file path
-
-#### toPngDir
-
-Convert docx path to png directory path
-
-##### Parameters
-
--   `docxPath` **[string][132]** the input docx file path
-
-Returns **[string][132]** the output png directory path
-
-### pdf
-
-Path convesion with input file type being pdf
-
-#### toPptx
-
-Convert pdf path to pptx path
-
-##### Parameters
-
--   `pdfPath` **[string][132]** the input pdf file path
-
-Returns **[string][132]** the output pptx file path
-
-#### toDocx
-
-Convert pdf path to docx path
-
-##### Parameters
-
--   `pdfPath` **[string][132]** the input pdf file path
-
-Returns **[string][132]** the output docx file path
-
-#### toPngDir
-
-Convert pdf path to png directory path
-
-##### Parameters
-
--   `pdfPath` **[string][132]** the input pdf file path
-
-Returns **[string][132]** the output png directory path
-
-### pngDir
-
-Path convesion with input file type being png
-
-#### toPptx
-
-Convert png directory path to pptx path
-
-##### Parameters
-
--   `pngDirPath` **[string][132]** the input png directory path
-
-Returns **[string][132]** the output pptx path
-
-#### toDocx
-
-Convert png directory path to docx path
-
-##### Parameters
-
--   `pngDirPath` **[string][132]** the input png directory path
-
-Returns **[string][132]** the output docx path
-
-#### toPdf
-
-Convert png directory path to pdf path
-
-##### Parameters
-
--   `pngDirPath` **[string][132]** the input png directory path
-
-Returns **[string][132]** the output pdf path
+Returns **[object][142]** actualDeletion, a deletion object describing the deleted files that are not generated from others
 
 ## ProcessDirector
 
@@ -438,9 +321,9 @@ Handle creation or modification of a pptx file
 
 #### Parameters
 
--   `pptxPath` **[string][132]** local path of the updated pptx file
+-   `pptxPath` **[String][139]** local path of the updated pptx file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handleDocxUpdate
 
@@ -448,9 +331,9 @@ Handle creation or modification of a docx file
 
 #### Parameters
 
--   `docxPath` **[string][132]** local path of the updated docx file
+-   `docxPath` **[String][139]** local path of the updated docx file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handlePdfUpdate
 
@@ -458,9 +341,9 @@ Handle creation or modification of a pdf file
 
 #### Parameters
 
--   `pdfPath` **[string][132]** local path of the updated pdf file
+-   `pdfPath` **[String][139]** local path of the updated pdf file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handlePptxDelete
 
@@ -468,9 +351,9 @@ Handle deletion of a pptx file
 
 #### Parameters
 
--   `pptxPath` **[string][132]** local path of the deleted pptx file
+-   `pptxPath` **[String][139]** local path of the deleted pptx file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handleDocxDelete
 
@@ -478,9 +361,9 @@ Handle deletion of a docx file
 
 #### Parameters
 
--   `docxPath` **[string][132]** local path of the deleted docx file
+-   `docxPath` **[String][139]** local path of the deleted docx file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handlePdfDelete
 
@@ -488,9 +371,9 @@ Handle deletion of a pdf file
 
 #### Parameters
 
--   `pdfPath` **[string][132]** local path of the deleted pdf file
+-   `pdfPath` **[String][139]** local path of the deleted pdf file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### handlePngDelete
 
@@ -499,9 +382,9 @@ Handle deletion of png files related to a specific bunch of documents
 
 #### Parameters
 
--   `docs` **[string][132]** DB records representing pages of the deleted file
+-   `docs` **[String][139]** DB records representing pages of the deleted file
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### reArrangePngs
 
@@ -509,12 +392,12 @@ Move png files to "data/png/<docId>.png". This is to prevent leakage of folder s
 
 #### Parameters
 
--   `$0` **[Object][135]** 
+-   `$0` **[Object][142]** 
     -   `$0.pages`  
--   `param` **[object][135]** 
--   `pages` **[Array][131]&lt;Doc>** 
+-   `param` **[object][142]** 
+-   `pages` **[Array][138]&lt;Doc>** 
 
-Returns **[Promise][133]&lt;[Array][131]&lt;Doc>>** pages with new png paths
+Returns **[Promise][140]&lt;[Array][138]&lt;Doc>>** pages with new png paths
 
 ## TypeConverter
 
@@ -530,9 +413,9 @@ Conversion from pptx to pdf
 
 #### Parameters
 
--   `pptxPath` **[string][132]** path of the source pptx file
+-   `pptxPath` **[String][139]** path of the source pptx file
 
-Returns **[Promise][133]&lt;[Boolean][136]>** a conversion promise with a boolean flag indicating if the it succeeds
+Returns **[Promise][140]&lt;[Boolean][143]>** a conversion promise with a boolean flag indicating if the it succeeds
 
 ### docx2pdf
 
@@ -540,9 +423,9 @@ Conversion from docx to pdf
 
 #### Parameters
 
--   `docxPath` **[string][132]** path of the source docx file
+-   `docxPath` **[String][139]** path of the source docx file
 
-Returns **[Promise][133]&lt;[Boolean][136]>** a conversion promise with a boolean flag indicating if the it succeeds
+Returns **[Promise][140]&lt;[Boolean][143]>** a conversion promise with a boolean flag indicating if the it succeeds
 
 ### pdf2png
 
@@ -550,56 +433,9 @@ Conversion from pdf to png
 
 #### Parameters
 
--   `pdfPath` **[string][132]** path of the source pdf file
+-   `pdfPath` **[String][139]** path of the source pdf file
 
-Returns **[Promise][133]&lt;any>** 
-
-## TermExtractor
-
-An instance handling extraction of terms from file pages or user query
-
-### Parameters
-
--   `pdfTaskManager` **TaskQueueManager** a task manager making sure that pdf text extraction tasks are done one after another
--   `queryTaskManager` **TaskQueueManager** a task manager making sure that query text extraction tasks are done one after another
--   `pdfExtract` **PDFExtract** a instance handling extraction of text from pdf files. [>> ref &lt;&lt;][137]
-
-### extractFromPdf
-
-Term extraction from a pdf file
-
-#### Parameters
-
--   `pdfPath` **[string][132]** path of the source pdf file
-
-#### Examples
-
-```javascript
-// each entry of "pages" is in following structure
-{
-  fileId,                    // an identifier generated from the raw file path (i.e. if "test.pdf" is generated from "test.docx", they share the same fileId)
-  docId,                     // an identifier of the document (page)
-  oriFilePath,               // original file path
-  pageIdx,                   // page index (starting from 1)
-  imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
-  termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
-    [term]: term_frequency,
-    ...
-  },
-}
-```
-
-Returns **[Promise][133]&lt;{pages}>** 
-
-### extractFromQuery
-
-Term extraction from a user query string
-
-#### Parameters
-
--   `query` **[string][132]** given by user
-
-Returns **[Array][131]&lt;[string][132]>** an array of extracted terms
+Returns **[Promise][140]&lt;any>** 
 
 ## DbInterface
 
@@ -607,13 +443,13 @@ An instance handling creat, read, update, delete (CRUD) operations on the Mongo 
 
 ### Parameters
 
--   `dbClient` **Db** a connected MongoDB instance [>> ref &lt;&lt;][138]
+-   `dbClient` **Db** a connected MongoDB instance [>> ref &lt;&lt;][144]
 
 ### connectDb
 
 Connect to database. The MongoDB url can be configured with "MONGO_DB.URL" in "config/AppConfig.const.js"
 
-Returns **[Promise][133]&lt;Db>** 
+Returns **[Promise][140]&lt;Db>** 
 
 ### updateFile
 
@@ -621,8 +457,8 @@ Create or update a file in the database
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.pages` **[Array][131]&lt;Doc>** the pages (documents) that belong to the file to be updated
+-   `param` **[object][142]** 
+    -   `param.pages` **[Array][138]&lt;Doc>** the pages (documents) that belong to the file to be updated
 
 #### Examples
 
@@ -641,7 +477,7 @@ Create or update a file in the database
 }
 ```
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### getFilePages
 
@@ -649,7 +485,7 @@ Given original file's path, get all the pages (documents) belonging to it
 
 #### Parameters
 
--   `oriFilePath` **[string][132]** original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
+-   `oriFilePath` **[String][139]** original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
 
 #### Examples
 
@@ -664,7 +500,7 @@ Given original file's path, get all the pages (documents) belonging to it
 }
 ```
 
-Returns **[Promise][133]&lt;[Array][131]&lt;Doc>>** 
+Returns **[Promise][140]&lt;[Array][138]&lt;Doc>>** 
 
 ### deleteFile
 
@@ -672,7 +508,7 @@ Given original file's path, delete all its belonging pages (documents)
 
 #### Parameters
 
--   `oriFilePath` **[string][132]** original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
+-   `oriFilePath` **[String][139]** original file path (i.e. if a pdf was generated from a docx, the docx file is the original one)
     -   `oriFilePath.oriFilePath`  
 
 #### Examples
@@ -688,7 +524,7 @@ Given original file's path, delete all its belonging pages (documents)
 }
 ```
 
-Returns **[Promise][133]&lt;[Array][131]&lt;Doc>>** 
+Returns **[Promise][140]&lt;[Array][138]&lt;Doc>>** 
 
 ### updatePage
 
@@ -718,7 +554,7 @@ Create or update a page (document) and compute term correlation scores related t
 }
 ```
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### updateTermCorrelations
 
@@ -726,10 +562,10 @@ Compute and update correlations between a term and all others
 
 #### Parameters
 
--   `term` **[string][132]** 
+-   `term` **[String][139]** 
     -   `term.term`  
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### updateTermCorrelation
 
@@ -737,11 +573,11 @@ Update correlation between 2 terms
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.terms` **[Array][131]&lt;[string][132]>** [term1, term2]
-    -   `param.tcr` **[number][130]** correlation between term1 and term2
+-   `param` **[object][142]** 
+    -   `param.terms` **[Array][138]&lt;[String][139]>** [term1, term2]
+    -   `param.tcr` **[number][137]** correlation between term1 and term2
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### updateDoc
 
@@ -766,7 +602,7 @@ Create or update a page (document)
 }
 ```
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### getDocById
 
@@ -774,8 +610,8 @@ Get a document (page) by its docId
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.docId` **[string][132]** 
+-   `param` **[object][142]** 
+    -   `param.docId` **[String][139]** 
 
 #### Examples
 
@@ -790,7 +626,7 @@ Get a document (page) by its docId
 }
 ```
 
-Returns **[Promise][133]&lt;Doc>** 
+Returns **[Promise][140]&lt;Doc>** 
 
 ### getDocsByTerm
 
@@ -798,8 +634,8 @@ Get all documents (pages) containing a term, also return the term frequency of t
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.term` **[string][132]** 
+-   `param` **[object][142]** 
+    -   `param.term` **[String][139]** 
 
 #### Examples
 
@@ -815,7 +651,7 @@ Get all documents (pages) containing a term, also return the term frequency of t
 }
 ```
 
-Returns **[Promise][133]&lt;[Array][131]&lt;DocWithTf>>** 
+Returns **[Promise][140]&lt;[Array][138]&lt;DocWithTf>>** 
 
 ### deleteDoc
 
@@ -823,10 +659,10 @@ Delete a document (page) by its docId
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.docId` **[string][132]** 
+-   `param` **[object][142]** 
+    -   `param.docId` **[String][139]** 
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### updateTermFreq
 
@@ -834,12 +670,12 @@ Update term frequency (i.e. occurrences of a term in a document)
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.docId` **[string][132]** 
-    -   `param.term` **[string][132]** 
-    -   `param.tf` **[number][130]** term frequency
+-   `param` **[object][142]** 
+    -   `param.docId` **[String][139]** 
+    -   `param.term` **[String][139]** 
+    -   `param.tf` **[number][137]** term frequency
 
-Returns **[Promise][133]&lt;any>** 
+Returns **[Promise][140]&lt;any>** 
 
 ### getTermsByDoc
 
@@ -847,10 +683,10 @@ Get all terms occurring in a document
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.docId` **[string][132]** 
+-   `param` **[object][142]** 
+    -   `param.docId` **[String][139]** 
 
-Returns **[Promise][133]&lt;[Array][131]&lt;[string][132]>>** promise with a list of terms
+Returns **[Promise][140]&lt;[Array][138]&lt;[String][139]>>** promise with a list of terms
 
 ### findClosestTerms
 
@@ -858,11 +694,11 @@ Given a term ,find the terms with highest correlation to it
 
 #### Parameters
 
--   `param` **[object][135]** 
-    -   `param.term` **[string][132]** 
--   `num` **[number][130]** maximum number of closest terms to return (optional, default `5`)
+-   `param` **[object][142]** 
+    -   `param.term` **[String][139]** 
+-   `num` **[number][137]** maximum number of closest terms to return (optional, default `5`)
 
-Returns **[Promise][133]&lt;[Array][131]&lt;{term, tcr}>>** promise with a list of terms with term correlation (tcr)
+Returns **[Promise][140]&lt;[Array][138]&lt;{term, tcr}>>** promise with a list of terms with term correlation (tcr)
 
 ### computeTermCorrelation
 
@@ -870,10 +706,220 @@ Compute correlation between 2 terms. The computation is based on cosine similari
 
 #### Parameters
 
--   `term1` **[string][132]** 
--   `term2` **[string][132]** 
+-   `term1` **[String][139]** 
+-   `term2` **[String][139]** 
 
-Returns **[Promise][133]&lt;[number][130]>** 
+Returns **[Promise][140]&lt;[number][137]>** 
+
+## PathConvert
+
+A bunch of file path conversion methods. In this project, the raw files uploaded by user
+will be located in "data/pptx", "data/docx", "data/pdf", according to their types. However,
+in order to extract text and generate page images for front-end displaying purpose, we
+follow a general flow of file type conversion: `pptx/docx --> pdf --> png`. The `PathCovert`
+module helps us to locate different format of the same raw file given a file path.
+
+### pptx
+
+Path convesion with input file type being pptx
+
+#### toPdf
+
+Convert pptx path to pdf path
+
+##### Parameters
+
+-   `pptxPath` **[String][139]** the input pptx file path
+
+Returns **[String][139]** the output pdf file path
+
+#### toPngDir
+
+Convert pptx path to png directory path
+
+##### Parameters
+
+-   `pptxPath` **[String][139]** the input pptx file path
+
+Returns **[String][139]** the output png directory path
+
+### docx
+
+Path convesion with input file type being docx
+
+#### toPdf
+
+Convert docx path to pdf path
+
+##### Parameters
+
+-   `docxPath` **[String][139]** the input docx file path
+
+Returns **[String][139]** the output pdf file path
+
+#### toPngDir
+
+Convert docx path to png directory path
+
+##### Parameters
+
+-   `docxPath` **[String][139]** the input docx file path
+
+Returns **[String][139]** the output png directory path
+
+### pdf
+
+Path convesion with input file type being pdf
+
+#### toPptx
+
+Convert pdf path to pptx path
+
+##### Parameters
+
+-   `pdfPath` **[String][139]** the input pdf file path
+
+Returns **[String][139]** the output pptx file path
+
+#### toDocx
+
+Convert pdf path to docx path
+
+##### Parameters
+
+-   `pdfPath` **[String][139]** the input pdf file path
+
+Returns **[String][139]** the output docx file path
+
+#### toPngDir
+
+Convert pdf path to png directory path
+
+##### Parameters
+
+-   `pdfPath` **[String][139]** the input pdf file path
+
+Returns **[String][139]** the output png directory path
+
+### pngDir
+
+Path convesion with input file type being png
+
+#### toPptx
+
+Convert png directory path to pptx path
+
+##### Parameters
+
+-   `pngDirPath` **[String][139]** the input png directory path
+
+Returns **[String][139]** the output pptx path
+
+#### toDocx
+
+Convert png directory path to docx path
+
+##### Parameters
+
+-   `pngDirPath` **[String][139]** the input png directory path
+
+Returns **[String][139]** the output docx path
+
+#### toPdf
+
+Convert png directory path to pdf path
+
+##### Parameters
+
+-   `pngDirPath` **[String][139]** the input png directory path
+
+Returns **[String][139]** the output pdf path
+
+## PdfUtil
+
+An instance handling serveral kind of operations on PDF files
+This is based on the Poppler Utilites command line tool
+
+### Parameters
+
+-   `extractionTaskManager` **TaskQueueManager** a task manager making sure that text extraction tasks are done one after another
+
+### extractTerms
+
+Term extraction from a pdf file
+
+#### Parameters
+
+-   `pdfPath` **[String][139]** path of the source pdf file
+
+#### Examples
+
+```javascript
+// each entry of "pages" is in following structure
+{
+  fileId,                    // an identifier generated from the raw file path (i.e. if "test.pdf" is generated from "test.docx", they share the same fileId)
+  docId,                     // an identifier of the document (page)
+  oriFilePath,               // original file path
+  pageIdx,                   // page index (starting from 1)
+  imgPath,                   // path of the corresponding png file. This is for front-end application to retrieve image
+  termFreqDict: {            // a mapping from terms to their occurrences (term frequency) in the page
+    [term]: term_frequency,
+    ...
+  },
+}
+```
+
+Returns **[Promise][140]&lt;{pages}>** 
+
+### getNumPages
+
+Get number of pages of a pdf file
+
+#### Parameters
+
+-   `pdfPath` **[String][139]** path of the source pdf file
+
+Returns **[Promise][140]&lt;[Number][137]>** promise with number of pages
+
+### getPageContent
+
+Get text content of a pdf page
+
+#### Parameters
+
+-   `pdfPath` **[String][139]** path of the source pdf file
+-   `pageIdx` **[Number][137]** page index, starting from 1
+
+Returns **[Promise][140]&lt;[String][139]>** promise with number of pages
+
+## Tokenizer
+
+An instance handling tokenization of terms from a string
+
+### Parameters
+
+-   `taskManager` **TaskQueueManager** a task manager making sure that tasks are done one after another
+
+### tokenize
+
+Tokenize a string
+
+#### Parameters
+
+-   `rawText` **[String][139]** the string to be tokenized, which can be in English, Chinese, or mixed
+
+#### Examples
+
+```javascript
+// a "TermFreqDict" object is a mapping from terms to their occurrences (term frequency) in rawText
+// a "TermFreqDict" object is in following structure
+{
+  [term]: term_frequency,
+  ...
+}
+```
+
+Returns **[Promise][140]&lt;TermFreqDict>** 
 
 ## PromiseUtil
 
@@ -885,7 +931,7 @@ Tolerate rejection of a promise by turning rejection into a resolved form (proba
 
 #### Parameters
 
--   `promise` **[Promise][133]&lt;any>** the input promise to be tolerated
+-   `promise` **[Promise][140]&lt;any>** the input promise to be tolerated
 
 #### Examples
 
@@ -898,7 +944,7 @@ Tolerate rejection of a promise by turning rejection into a resolved form (proba
 }
 ```
 
-Returns **[Promise][133]&lt;Result>** a new promise that will always be resolved
+Returns **[Promise][140]&lt;Result>** a new promise that will always be resolved
 
 ### tolerateAllAndKeepResolved
 
@@ -908,9 +954,9 @@ The rejection of sub-promises will be omitted while only resolved values will be
 #### Parameters
 
 -   `promises`  
--   `array` **[Array][131]&lt;[Promise][133]&lt;any>>** of sub-promises to be executed
+-   `array` **[Array][138]&lt;[Promise][140]&lt;any>>** of sub-promises to be executed
 
-Returns **[Promise][133]&lt;[Array][131]&lt;any>>** a promise with values of all the resolved sub-promises
+Returns **[Promise][140]&lt;[Array][138]&lt;any>>** a promise with values of all the resolved sub-promises
 
 [1]: #apiserver
 
@@ -966,224 +1012,236 @@ Returns **[Promise][133]&lt;[Array][131]&lt;any>>** a promise with values of all
 
 [27]: #parameters-7
 
-[28]: #pathconvert
+[28]: #processdirector
 
-[29]: #pptx
+[29]: #handlepptxupdate
 
-[30]: #topdf
+[30]: #parameters-8
 
-[31]: #parameters-8
+[31]: #handledocxupdate
 
-[32]: #topngdir
+[32]: #parameters-9
 
-[33]: #parameters-9
+[33]: #handlepdfupdate
 
-[34]: #docx
+[34]: #parameters-10
 
-[35]: #topdf-1
+[35]: #handlepptxdelete
 
-[36]: #parameters-10
+[36]: #parameters-11
 
-[37]: #topngdir-1
+[37]: #handledocxdelete
 
-[38]: #parameters-11
+[38]: #parameters-12
 
-[39]: #pdf
+[39]: #handlepdfdelete
 
-[40]: #topptx
+[40]: #parameters-13
 
-[41]: #parameters-12
+[41]: #handlepngdelete
 
-[42]: #todocx
+[42]: #parameters-14
 
-[43]: #parameters-13
+[43]: #rearrangepngs
 
-[44]: #topngdir-2
+[44]: #parameters-15
 
-[45]: #parameters-14
+[45]: #typeconverter
 
-[46]: #pngdir
+[46]: #parameters-16
 
-[47]: #topptx-1
+[47]: #pptx2pdf
 
-[48]: #parameters-15
+[48]: #parameters-17
 
-[49]: #todocx-1
+[49]: #docx2pdf
 
-[50]: #parameters-16
+[50]: #parameters-18
 
-[51]: #topdf-2
+[51]: #pdf2png
 
-[52]: #parameters-17
+[52]: #parameters-19
 
-[53]: #processdirector
+[53]: #dbinterface
 
-[54]: #handlepptxupdate
+[54]: #parameters-20
 
-[55]: #parameters-18
+[55]: #connectdb
 
-[56]: #handledocxupdate
+[56]: #updatefile
 
-[57]: #parameters-19
+[57]: #parameters-21
 
-[58]: #handlepdfupdate
+[58]: #examples-4
 
-[59]: #parameters-20
+[59]: #getfilepages
 
-[60]: #handlepptxdelete
+[60]: #parameters-22
 
-[61]: #parameters-21
+[61]: #examples-5
 
-[62]: #handledocxdelete
+[62]: #deletefile
 
-[63]: #parameters-22
+[63]: #parameters-23
 
-[64]: #handlepdfdelete
+[64]: #examples-6
 
-[65]: #parameters-23
+[65]: #updatepage
 
-[66]: #handlepngdelete
+[66]: #parameters-24
 
-[67]: #parameters-24
+[67]: #examples-7
 
-[68]: #rearrangepngs
+[68]: #updatetermcorrelations
 
 [69]: #parameters-25
 
-[70]: #typeconverter
+[70]: #updatetermcorrelation
 
 [71]: #parameters-26
 
-[72]: #pptx2pdf
+[72]: #updatedoc
 
 [73]: #parameters-27
 
-[74]: #docx2pdf
+[74]: #examples-8
 
-[75]: #parameters-28
+[75]: #getdocbyid
 
-[76]: #pdf2png
+[76]: #parameters-28
 
-[77]: #parameters-29
+[77]: #examples-9
 
-[78]: #termextractor
+[78]: #getdocsbyterm
 
-[79]: #parameters-30
+[79]: #parameters-29
 
-[80]: #extractfrompdf
+[80]: #examples-10
 
-[81]: #parameters-31
+[81]: #deletedoc
 
-[82]: #examples-4
+[82]: #parameters-30
 
-[83]: #extractfromquery
+[83]: #updatetermfreq
 
-[84]: #parameters-32
+[84]: #parameters-31
 
-[85]: #dbinterface
+[85]: #gettermsbydoc
 
-[86]: #parameters-33
+[86]: #parameters-32
 
-[87]: #connectdb
+[87]: #findclosestterms
 
-[88]: #updatefile
+[88]: #parameters-33
 
-[89]: #parameters-34
+[89]: #computetermcorrelation
 
-[90]: #examples-5
+[90]: #parameters-34
 
-[91]: #getfilepages
+[91]: #pathconvert
 
-[92]: #parameters-35
+[92]: #pptx
 
-[93]: #examples-6
+[93]: #topdf
 
-[94]: #deletefile
+[94]: #parameters-35
 
-[95]: #parameters-36
+[95]: #topngdir
 
-[96]: #examples-7
+[96]: #parameters-36
 
-[97]: #updatepage
+[97]: #docx
 
-[98]: #parameters-37
+[98]: #topdf-1
 
-[99]: #examples-8
+[99]: #parameters-37
 
-[100]: #updatetermcorrelations
+[100]: #topngdir-1
 
 [101]: #parameters-38
 
-[102]: #updatetermcorrelation
+[102]: #pdf
 
-[103]: #parameters-39
+[103]: #topptx
 
-[104]: #updatedoc
+[104]: #parameters-39
 
-[105]: #parameters-40
+[105]: #todocx
 
-[106]: #examples-9
+[106]: #parameters-40
 
-[107]: #getdocbyid
+[107]: #topngdir-2
 
 [108]: #parameters-41
 
-[109]: #examples-10
+[109]: #pngdir
 
-[110]: #getdocsbyterm
+[110]: #topptx-1
 
 [111]: #parameters-42
 
-[112]: #examples-11
+[112]: #todocx-1
 
-[113]: #deletedoc
+[113]: #parameters-43
 
-[114]: #parameters-43
+[114]: #topdf-2
 
-[115]: #updatetermfreq
+[115]: #parameters-44
 
-[116]: #parameters-44
+[116]: #pdfutil
 
-[117]: #gettermsbydoc
+[117]: #parameters-45
 
-[118]: #parameters-45
+[118]: #extractterms
 
-[119]: #findclosestterms
+[119]: #parameters-46
 
-[120]: #parameters-46
+[120]: #examples-11
 
-[121]: #computetermcorrelation
+[121]: #getnumpages
 
 [122]: #parameters-47
 
-[123]: #promiseutil
+[123]: #getpagecontent
 
-[124]: #tolerate
+[124]: #parameters-48
 
-[125]: #parameters-48
+[125]: #tokenizer
 
-[126]: #examples-12
+[126]: #parameters-49
 
-[127]: #tolerateallandkeepresolved
+[127]: #tokenize
 
-[128]: #parameters-49
+[128]: #parameters-50
 
-[129]: http://expressjs.com/en/api.html
+[129]: #examples-12
 
-[130]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[130]: #promiseutil
 
-[131]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[131]: #tolerate
 
-[132]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[132]: #parameters-51
 
-[133]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[133]: #examples-13
 
-[134]: https://dropbox.github.io/dropbox-sdk-js/Dropbox.html
+[134]: #tolerateallandkeepresolved
 
-[135]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[135]: #parameters-52
 
-[136]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[136]: http://expressjs.com/en/api.html
 
-[137]: https://www.npmjs.com/package/pdf.js-extract
+[137]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[138]: http://mongodb.github.io/node-mongodb-native/2.0/api/Db.html
+[138]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[139]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[140]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[141]: https://dropbox.github.io/dropbox-sdk-js/Dropbox.html
+
+[142]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[143]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[144]: http://mongodb.github.io/node-mongodb-native/2.0/api/Db.html
