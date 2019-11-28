@@ -467,6 +467,25 @@ class DbInterface {
         return Promise.resolve(0);
       });
   }
+  updateSearchHistory(termFreqDictString) {
+      return (
+            PromiseUtil.tolerateAllAndKeepResolved([
+            this.dbClient
+              .db(AppConfig.MONGO_DB.DB_NAME)
+              .collection(AppConfig.MONGO_DB.COLLECTION_NAME.SEARCH_HISTORY)
+              .insertOne(
+                  { time: Date.now(), search_terms: termFreqDictString }
+                )
+              .catch((err) => {
+                  console.log('ERROR [DbInterface.updateSearchHistory]: ', err);
+                  return Promise.resolve();
+                }),
+          ])
+          );
+    }
+
+
+
 }
 
 export default new DbInterface();

@@ -2,6 +2,7 @@ import express from 'express';
 import AppConfig from '../../config/AppConfig.const';
 import TermMatcher from '../TermMatcher/TermMatcher.class';
 import Tokenizer from '../Tokenizer/Tokenizer.class';
+import DbInterface from '../DbInterface/DbInterface.class';
 
 /**
  * A list of API handlers defining how server should response given a http request.
@@ -26,7 +27,11 @@ const ApiHandler = [
           // Return a list of related pages, sorted by correlation (from high to low)
           Tokenizer
             .tokenize(query)
-            .then((termFreqDict) => Object.keys(termFreqDict))
+            .then((termFreqDict) => {
+              const termFreqDictString = JSON.stringify(termFreqDict);
+              DbInterface.updateSearchHistory(termFreqDictString);
+	      return Object.keys(termFreqDict);
+	    })
             .then((searchTerms) => TermMatcher.match(searchTerms))
             .then((pageList) => {
               res.end(JSON.stringify({

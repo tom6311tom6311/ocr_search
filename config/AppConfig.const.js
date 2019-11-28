@@ -33,6 +33,7 @@ const AppConfig = {
       DOCS: 'docs',
       TERM_FREQS: 'term_freqs',
       TERM_CORRELATIONS: 'term_correlations',
+      SEARCH_HISTORY: 'search_history',
     },
   },
 };
