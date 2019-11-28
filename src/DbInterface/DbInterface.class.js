@@ -467,20 +467,31 @@ class DbInterface {
         return Promise.resolve(0);
       });
   }
-  updateSearchHistory(termFreqDictString) {
+
+  /**
+   * Update the search history. Insert timestamp and the string of termFreqDict.
+   * @param {String} termFreqDictString
+   * @param {String} query
+   * @returns {Promise<any>}
+   */
+  updateSearchHistory(termFreqDictString, query) {
       return (
-            PromiseUtil.tolerateAllAndKeepResolved([
+          PromiseUtil.tolerateAllAndKeepResolved([
             this.dbClient
               .db(AppConfig.MONGO_DB.DB_NAME)
               .collection(AppConfig.MONGO_DB.COLLECTION_NAME.SEARCH_HISTORY)
               .insertOne(
-                  { time: Date.now(), search_terms: termFreqDictString }
+                  {
+                    time: Date.now(),
+                    search_terms: termFreqDictString,
+                    search_query: query,
+                  }
                 )
-              .catch((err) => {
+                .catch((err) => {
                   console.log('ERROR [DbInterface.updateSearchHistory]: ', err);
                   return Promise.resolve();
                 }),
-          ])
+            ])
           );
     }
 
