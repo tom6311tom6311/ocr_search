@@ -143,13 +143,15 @@ class DbInterface {
         .updateDoc({ docId, ...params })
         .then(() => PromiseUtil.tolerateAllAndKeepResolved(
           Object.entries(termFreqDict).map(
-            ([term, tf]) => (
+            ([term, tf]) => {
+              console.log(termFreqDict);
+		 return  (
               this
                 .updateTermFreq({ docId, term, tf })
                 // workaround: disable term-correlation computation for now
                 // TODO: improve term-correlation computation
                 // .then(() => this.updateTermCorrelations({ term }))
-            ),
+            )}
           ),
         ))
     );
@@ -393,7 +395,7 @@ class DbInterface {
         .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
         .find({ docId })
         .toArray()
-        .then((entries) => entries.map(({ term }) => term))
+        .then((entries) => entries.map(({ term }) => ({ term })))
         .catch((err) => {
           console.log('ERROR [DbInterface.getTermsByDoc]: ', err);
           return Promise.resolve([]);
@@ -497,6 +499,40 @@ class DbInterface {
 
 
 
-}
+  getTermsNumByDoc({ docId }) {
+      return (
+          this.dbClient
+            .db(AppConfig.MONGO_DB.DB_NAME)
+            .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
+            .find({ docId })
+            .toArray()
+            .then((entries) => entries.map(({ tf }) => ( tf )))
+	    .then((tfs) => {
+              //console.log(tfs);
+              return tfs.reduce((a,b)=>a+b);
+	    })
+            .catch((err) => {
+              console.log('ERROR [DbInterface.getTermsByDoc]: ', err);
+              return Promise.resolve([]);
+            })
+        );
+  }
 
+  getAllDocNum() {
+        return (
+          this.dbClient
+            .db(AppConfig.MONGO_DB.DB_NAME)
+            .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
+            .distinct("docId")
+            .then((docIds) => {
+              //console.log(docIds);
+              return docIds.length
+            })
+            .catch((err) => { 
+               console.log('ERROR [DbInterface.getTermsByDoc]: ', err);
+	       return Promise.resolve([]);
+            }) 
+	);
+  }
+}
 export default new DbInterface();

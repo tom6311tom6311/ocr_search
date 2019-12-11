@@ -24,10 +24,11 @@ class TermMatcher {
    */
   static match(searchTerms) {
     // for each search term, find its related documents and compute correlation score
-    return PromiseUtil
+   /*
+      return PromiseUtil
       .tolerateAllAndKeepResolved(
         searchTerms.map(
-          (term) => (
+         (term) => (
             DbInterface
               .getDocsByTerm({ term })
               .then((docs) => (
@@ -42,7 +43,7 @@ class TermMatcher {
         const docsRaw = [].concat(...docss);
         docsRaw.forEach((doc) => {
           if (docDict[doc.docId] === undefined) {
-            docDict[doc.docId] = doc;
+           docDict[doc.docId] = doc;
           } else if (docDict[doc.docId].score < doc.score) {
             docDict[doc.docId].score = doc.score;
           }
@@ -51,33 +52,54 @@ class TermMatcher {
       })
       // sort the resulting documents by correlation score
       .then((docs) => docs.sort((a, b) => b.score - a.score));
+    */
 
+	
     // workaround: disable term-correlation computation for now
     // TODO: improve term-correlation computation
-
+      
     // return PromiseUtil
-    //   // expand each search term
-    //   .tolerateAllAndKeepResolved(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
-    //   // merge all the expanded term lists into a single list called "expandedTerms"
-    //   .then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
-    //   .then((expandedTerms) => (
-    //     // for each of the expanded terms, find its related documents and compute correlation scores
-    //     PromiseUtil.tolerateAllAndKeepResolved(
-    //       expandedTerms.map(
-    //         ({ term, tcr }) => (
-    //           DbInterface
-    //             .getDocsByTerm({ term })
-    //             .then((docs) => (
-    //               docs.map(({ tf, ...doc }) => ({ ...doc, score: tcr * tf }))
-    //             ))
-    //         ),
-    //       ),
-    //     )
-    //   ))
-    //   // merge all lists of documents found into a single list
-    //   .then((docss) => [].concat(...docss))
-    //   // sort the resulting documents by correlation score
-    //   .then((docs) => docs.sort((a, b) => b.score - a.score));
+       // expand each search term
+       //.tolerateAllAndKeepResolved(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
+       // merge all the expanded term lists into a single list called "expandedTerms"
+       //.then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
+       //.then((expandedTerms) => (
+       // for each of the expanded terms, find its related documents and compute correlation scores
+       //PromiseUtil
+       //  .tolerateAllAndKeepResolved(
+       //  expandedTerms.map(
+       return DbInterface.getAllDocNum()
+          .then((DocNum) => (
+	    PromiseUtil
+	      .tolerateAllAndKeepResolved(
+	        searchTerms.map(
+                 ( term ) =>  (
+		   DbInterface
+                   .getDocsByTerm({ term })
+                   .then((docs) => (
+	             DbInterface.getAllDocNum()
+	             .then((DocNum) => (
+	               PromiseUtil.tolerateAllAndKeepResolved(
+		         docs.map(({ tf, docId, ...doc }) => 
+                           DbInterface.getTermsNumByDoc({ docId })
+                           .then((allTermsNum) => 
+		             ({ ...doc, score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermsNum})
+			   )
+		         )
+	                )
+		     ))
+                   //return docs.map(({ tf, ...doc }) => ({ ...doc, score: tcr * tf }))
+		   ))
+                 ),
+               ),
+	     )
+         ))
+      //  )
+      // ))
+       // merge all lists of documents found into a single list
+       .then((docss) => [].concat(...docss))
+       // sort the resulting documents by correlation score
+       .then((docs) => docs.sort((a, b) => b.score - a.score));
   }
 }
 
