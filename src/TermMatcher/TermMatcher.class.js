@@ -68,38 +68,32 @@ class TermMatcher {
        //PromiseUtil
        //  .tolerateAllAndKeepResolved(
        //  expandedTerms.map(
+
        return DbInterface.getAllDocNum()
-          .then((DocNum) => (
-	    PromiseUtil
-	      .tolerateAllAndKeepResolved(
-	        searchTerms.map(
+              .then((DocNum) => (
+              PromiseUtil
+    	      .tolerateAllAndKeepResolved(
+     	        searchTerms.map(
                  ( term ) =>  (
-		   DbInterface
-                   .getDocsByTerm({ term })
-                   .then((docs) => (
-	             DbInterface.getAllDocNum()
-	             .then((DocNum) => (
-	               PromiseUtil.tolerateAllAndKeepResolved(
-		         docs.map(({ tf, docId, ...doc }) => 
-                           DbInterface.getTermsNumByDoc({ docId })
-                           .then((allTermsNum) => 
-		             ({ ...doc, score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermsNum})
-			   )
-		         )
-	                )
-		     ))
-                   //return docs.map(({ tf, ...doc }) => ({ ...doc, score: tcr * tf }))
-		   ))
+ 		   DbInterface
+                    .getDocsByTerm({ term })
+                    .then((docs) => (
+       		         docs.map(({ tf, docId, allTermNum, ...doc }) =>      
+   		             ({ ...doc, score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermNum})
+ 		         )
+  		     )
+		   ) 
                  ),
-               ),
-	     )
-         ))
-      //  )
-      // ))
+                ),
+               )
+            ))
        // merge all lists of documents found into a single list
-       .then((docss) => [].concat(...docss))
+          .then((docss) => [].concat(...docss))
        // sort the resulting documents by correlation score
-       .then((docs) => docs.sort((a, b) => b.score - a.score));
+          .then((docs) => {
+		return  docs.sort((a, b) => b.score - a.score)
+	  });
+	
   }
 }
 

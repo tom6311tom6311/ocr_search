@@ -138,16 +138,16 @@ class DbInterface {
    *
    */
   updatePage({ docId, termFreqDict, ...params }) {
+    const allTermNum = Object.values(termFreqDict).reduce((a,b)=>a+b);
     return (
       this
         .updateDoc({ docId, ...params })
         .then(() => PromiseUtil.tolerateAllAndKeepResolved(
           Object.entries(termFreqDict).map(
             ([term, tf]) => {
-              console.log(termFreqDict);
-		 return  (
+              return  (
               this
-                .updateTermFreq({ docId, term, tf })
+                .updateTermFreq({ docId, term, tf, allTermNum })
                 // workaround: disable term-correlation computation for now
                 // TODO: improve term-correlation computation
                 // .then(() => this.updateTermCorrelations({ term }))
@@ -312,10 +312,10 @@ class DbInterface {
             PromiseUtil
               .tolerateAllAndKeepResolved(
                 entries.map(
-                  ({ docId, tf }) => (
+                  ({ docId, tf, allTermNum  }) => (
                     this
                       .getDocById({ docId })
-                      .then((doc) => ({ ...doc, tf }))
+                      .then((doc) => ({ ...doc, tf, allTermNum }))
                   ),
                 ),
               )
@@ -365,14 +365,14 @@ class DbInterface {
    * @param {number} param.tf term frequency
    * @returns {Promise<any>}
    */
-  updateTermFreq({ docId, term, tf }) {
+  updateTermFreq({ docId, term, tf, allTermNum }) {
     return (
       this.dbClient
         .db(AppConfig.MONGO_DB.DB_NAME)
         .collection(AppConfig.MONGO_DB.COLLECTION_NAME.TERM_FREQS)
         .updateOne(
           { docId, term },
-          { $set: { docId, term, tf } },
+          { $set: { docId, term, tf, allTermNum } },
           { upsert: true },
         )
         .catch((err) => {
