@@ -55,7 +55,6 @@ class TermMatcher {
       })
       // sort the resulting documents by correlation score
       .then((docs) => docs.sort((a, b) => b.score - a.score));
-    */
 
     } else if ( scoreType  == "tfidf" ) {
       return DbInterface.getAllDocNum()
