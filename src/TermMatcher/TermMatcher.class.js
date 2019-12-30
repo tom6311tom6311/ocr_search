@@ -27,7 +27,6 @@ class TermMatcher {
     const scoreType = "BM25";
     //scoreType = "simpleMatch"
     if (scoreType == "simpleMatch") {
-
       return PromiseUtil
       .tolerateAllAndKeepResolved(
         searchTerms.map(
@@ -66,15 +65,15 @@ class TermMatcher {
            DbInterface
             .getDocsByTerm({ term })
             .then((docs) => (
-                 docs.map(({ tf, docId, allTermNum, ...doc }) =>
-                      ({ ...doc, docId,score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermNum})
-                 )
-             )
-           )
+              docs.map(({ tf, docId, allTermNum, ...doc }) =>
+                ({ ...doc, docId,score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermNum})
+              )
+            )
+            )
          ),
         ),
        )
-    ))
+      ))
     // merge all lists of documents found into a single list
       .then((docss) => [].concat(...docss))
     // sort the resulting documents by correlation score
@@ -94,55 +93,55 @@ class TermMatcher {
       const k = 1.5;
       const b = 0.75;
       return DbInterface.getAllDocNum()
-              .then((DocNum) => (
-              PromiseUtil
-              .tolerateAllAndKeepResolved(
-              searchTerms.map(
-                ( term ) =>  (
-                  DbInterface
-                    .getDocsByTerm({ term })
-                    .then((docs) => {
-                      var avgdl = 0;
-                      for ( var i=0; i < docs.length; i++ ){
-                        avgdl += docs[i]['allTermNum'];
-                      }
-                      avgdl = avgdl/docs.length;
-                      return (docs.map(({ tf, docId, allTermNum, ...doc }) =>  {
-                        console.log(DocNum);
-                        console.log(docs.length);
-                        console.log(tf);
-                        console.log(allTermNum);
-                        console.log(avgdl);
-                        console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)));
-                        console.log((tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
-                        console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
-                        return ({ ...doc, docId, score: Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl)))  })
+        .then((DocNum) => (
+        PromiseUtil
+        .tolerateAllAndKeepResolved(
+        searchTerms.map(
+          ( term ) =>  (
+            DbInterface
+              .getDocsByTerm({ term })
+              .then((docs) => {
+                var avgdl = 0;
+                for ( var i=0; i < docs.length; i++ ){
+                  avgdl += docs[i]['allTermNum'];
+                }
+                avgdl = avgdl/docs.length;
+                return (docs.map(({ tf, docId, allTermNum, ...doc }) =>  {
+                  console.log(DocNum);
+                  console.log(docs.length);
+                  console.log(tf);
+                  console.log(allTermNum);
+                  console.log(avgdl);
+                  console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)));
+                  console.log((tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
+                  console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
+                  return ({ ...doc, docId, score: Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl)))  })
 
-                        }
-                      ))
-                    }
-                    )
-                ),
-              ),
-              )
-            ))           
-          // merge all lists of documents found into a single list
-            .then((docss) => [].concat(...docss))
-          // sort the resulting documents by correlation score
-            .then((docs) => {
-              const docSumScore = {}
-              for ( var i=0; i < docs.length; i++ ){
-                if (Object.keys(docSumScore).includes(docs[i]['fileId'])) {
-                  docSumScore[docs[i]['fileId']]['score'] += docs[i]['score']
-                }
-                else{
-                  docSumScore[docs[i]['fileId']] = docs[i];
-                }
+                  }
+                ))
               }
-              return Object.values(docSumScore).sort((a, b) => b.score - a.score)
-            });
+              )
+          ),
+        ),
+        )
+      ))           
+    // merge all lists of documents found into a single list
+      .then((docss) => [].concat(...docss))
+    // sort the resulting documents by correlation score
+      .then((docs) => {
+        const docSumScore = {}
+        for ( var i=0; i < docs.length; i++ ){
+          if (Object.keys(docSumScore).includes(docs[i]['fileId'])) {
+            docSumScore[docs[i]['fileId']]['score'] += docs[i]['score']
+          }
+          else{
+            docSumScore[docs[i]['fileId']] = docs[i];
+          }
+        }
+        return Object.values(docSumScore).sort((a, b) => b.score - a.score)
+      });
 
-      }
+    }
   }
 }
 
