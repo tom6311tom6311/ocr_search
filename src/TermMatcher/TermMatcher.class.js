@@ -24,7 +24,10 @@ class TermMatcher {
    */
   static match(searchTerms) {
     // for each search term, find its related documents and compute correlation score
-   /*
+    const scoreType = "BM25";
+    //scoreType = "simpleMatch"
+    if (scoreType == "simpleMatch") {
+
       return PromiseUtil
       .tolerateAllAndKeepResolved(
         searchTerms.map(
@@ -54,46 +57,93 @@ class TermMatcher {
       .then((docs) => docs.sort((a, b) => b.score - a.score));
     */
 
-	
-    // workaround: disable term-correlation computation for now
-    // TODO: improve term-correlation computation
-      
-    // return PromiseUtil
-       // expand each search term
-       //.tolerateAllAndKeepResolved(searchTerms.map((term) => DbInterface.findClosestTerms({ term })))
-       // merge all the expanded term lists into a single list called "expandedTerms"
-       //.then((termss) => ([...new Set(searchTerms.map((term) => ({ term, tcr: 1 })).concat(...termss))]))
-       //.then((expandedTerms) => (
-       // for each of the expanded terms, find its related documents and compute correlation scores
-       //PromiseUtil
-       //  .tolerateAllAndKeepResolved(
-       //  expandedTerms.map(
-
-       return DbInterface.getAllDocNum()
+    } else if ( scoreType  == "tfidf" ) {
+      return DbInterface.getAllDocNum()
+      .then((DocNum) => (
+      PromiseUtil
+      .tolerateAllAndKeepResolved(
+        searchTerms.map(
+         ( term ) =>  (
+           DbInterface
+            .getDocsByTerm({ term })
+            .then((docs) => (
+                 docs.map(({ tf, docId, allTermNum, ...doc }) =>
+                      ({ ...doc, docId,score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermNum})
+                 )
+             )
+           )
+         ),
+        ),
+       )
+    ))
+    // merge all lists of documents found into a single list
+      .then((docss) => [].concat(...docss))
+    // sort the resulting documents by correlation score
+      .then((docs) => {
+        const docSumScore = {}
+        for ( var i=0; i < docs.length; i++ ){
+          if (Object.keys(docSumScore).includes(docs[i]['fileId'])) {
+            docSumScore[docs[i]['fileId']]['score'] += docs[i]['score']
+          }
+          else{
+            docSumScore[docs[i]['fileId']] = docs[i];
+          }
+        }
+        return Object.values(docSumScore).sort((a, b) => b.score - a.score);
+      });
+    } else if ( scoreType  == "BM25" ) {
+      const k = 1.5;
+      const b = 0.75;
+      return DbInterface.getAllDocNum()
               .then((DocNum) => (
               PromiseUtil
-    	      .tolerateAllAndKeepResolved(
-     	        searchTerms.map(
-                 ( term ) =>  (
- 		   DbInterface
+              .tolerateAllAndKeepResolved(
+              searchTerms.map(
+                ( term ) =>  (
+                  DbInterface
                     .getDocsByTerm({ term })
-                    .then((docs) => (
-       		         docs.map(({ tf, docId, allTermNum, ...doc }) =>      
-   		             ({ ...doc, score: Math.log10( DocNum / (1+docs.length) ) * tf / allTermNum})
- 		         )
-  		     )
-		   ) 
-                 ),
+                    .then((docs) => {
+                      var avgdl = 0;
+                      for ( var i=0; i < docs.length; i++ ){
+                        avgdl += docs[i]['allTermNum'];
+                      }
+                      avgdl = avgdl/docs.length;
+                      return (docs.map(({ tf, docId, allTermNum, ...doc }) =>  {
+                        console.log(DocNum);
+                        console.log(docs.length);
+                        console.log(tf);
+                        console.log(allTermNum);
+                        console.log(avgdl);
+                        console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)));
+                        console.log((tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
+                        console.log(Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl))));
+                        return ({ ...doc, docId, score: Math.log10((DocNum - docs.length +0.5) / (docs.length + 0.5)) * (tf * (k+1)) / (tf + (k*(1-b+b*allTermNum/avgdl)))  })
+
+                        }
+                      ))
+                    }
+                    )
                 ),
-               )
-            ))
-       // merge all lists of documents found into a single list
-          .then((docss) => [].concat(...docss))
-       // sort the resulting documents by correlation score
-          .then((docs) => {
-		return  docs.sort((a, b) => b.score - a.score)
-	  });
-	
+              ),
+              )
+            ))           
+          // merge all lists of documents found into a single list
+            .then((docss) => [].concat(...docss))
+          // sort the resulting documents by correlation score
+            .then((docs) => {
+              const docSumScore = {}
+              for ( var i=0; i < docs.length; i++ ){
+                if (Object.keys(docSumScore).includes(docs[i]['fileId'])) {
+                  docSumScore[docs[i]['fileId']]['score'] += docs[i]['score']
+                }
+                else{
+                  docSumScore[docs[i]['fileId']] = docs[i];
+                }
+              }
+              return Object.values(docSumScore).sort((a, b) => b.score - a.score)
+            });
+
+      }
   }
 }
 
