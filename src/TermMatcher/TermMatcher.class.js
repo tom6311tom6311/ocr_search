@@ -24,8 +24,8 @@ class TermMatcher {
    */
   static match(searchTerms) {
     // for each search term, find its related documents and compute correlation score
-    const scoreType = "tfidf";
-    //scoreType = "simpleMatch"
+    const scoreType = "BM25";
+    //scoreType = "tfidf"
     if (scoreType == "simpleMatch") {
    
       return PromiseUtil

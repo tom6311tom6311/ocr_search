@@ -37,10 +37,12 @@ class Tokenizer {
               .replace(/|•|、/g, '').replace(/^ +| +$/g, '')
               .toLowerCase();
             const bufs = [];
-            const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
+            // const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
+            const tokenizingProcess = spawn('curl', ['http://localhost:4567/"'+text+'"']);
             tokenizingProcess.stdout.on('data', (buf) => {
               // push the received buffer to an array instead of parse it immediately.
-              // this is to avoid the case that output data size exceeds stdout limit
+              // thprint(tokenlize('apple'))
+	      // is is to avoid the case that output data size exceeds stdout limit
               // and being segmented forcibly
               bufs.push(buf);
             });
