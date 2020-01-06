@@ -75,7 +75,7 @@ class server():
         self.user_server.bind((self.ip, self.port))
         self.user_server.listen(10)
         self.user_server_ready = True
-        
+        print('Server Ready') 
         while True:
             conn,addr = self.user_server.accept()
             #print(conn,addr) 
@@ -83,8 +83,7 @@ class server():
                 data = conn.recv(TRANS_SIZE).decode()
                 text = data[data.find('GET ')+4:data.find(' HTTP')]
                 d = tokenlize(text)
-                to_send = json.dumps(d)
-                conn.send(to_send.encode('utf-8'))                                                                                                                                         
+                conn.send(d.encode('utf-8'))
             except:
                 conn.send('error')
                 print('error')
