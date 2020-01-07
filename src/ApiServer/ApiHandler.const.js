@@ -29,7 +29,7 @@ const ApiHandler = [
             .tokenize(query)
             .then((termFreqDict) => {
               // before using TermMatcher, save the searchterm into the DB.
-              DbInterface.updateSearchHistory(JSON.stringify(termFreqDict), query);
+              // DbInterface.updateSearchHistory(JSON.stringify(termFreqDict), query);
 	      return Object.keys(termFreqDict);
 	    })
             .then((searchTerms) => TermMatcher.match(searchTerms))
