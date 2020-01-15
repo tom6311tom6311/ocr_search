@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-with open('bm25sesult.json', 'r') as jsonfile:
+with open('simple.json', 'r') as jsonfile:
     bm25 = json.load(jsonfile)
 
 #print(bm25.keys())

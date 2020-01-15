@@ -19,7 +19,7 @@ docIds = [d for d in cursor]
 termList = []
 for doc in docIds:
     termList.append(doc['term'])
-
+print(termList)
 result = []
 
 for tNum in tqdm(range(1,21)):

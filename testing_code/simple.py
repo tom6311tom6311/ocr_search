@@ -11,7 +11,7 @@ conn = MongoClient("mongodb://localhost:27017/")
 db = conn.term_db
 collection = db.term_freqs
 
-with open('tfidfresult.json', 'r') as jsonfile:
+with open('simple.json', 'r') as jsonfile:
     result = json.load(jsonfile)
 
 with open('bm25sesult.json', 'r') as jsonfile:
@@ -51,6 +51,6 @@ for docId in bm25.keys():
     result[docId] = numberScoreDict
     
     #print(result)
-    with open('tfidfresult.json', 'w') as jsonfile:
+    with open('simple.json', 'w') as jsonfile:
         json.dump(result, jsonfile)
 
