@@ -27,7 +27,7 @@ class TermMatcher {
     const scoreType = "BM25";
     //scoreType = "tfidf"
     if (scoreType == "simpleMatch") {
-   
+ 
       return PromiseUtil
       .tolerateAllAndKeepResolved(
         searchTerms.map(

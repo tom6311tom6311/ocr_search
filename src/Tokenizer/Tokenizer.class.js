@@ -37,8 +37,58 @@ class Tokenizer {
               .replace(/|•|、/g, '').replace(/^ +| +$/g, '')
               .toLowerCase();
             const bufs = [];
-            // const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
-            const tokenizingProcess = spawn('curl', ['http://localhost:4567/"'+text+'"']);
+            const tokenizingProcess = spawn('python3', ['src/py/tokenize_and_stem.py', text]);
+            tokenizingProcess.stdout.on('data', (buf) => {
+              // push the received buffer to an array instead of parse it immediately.
+              // thprint(tokenlize('apple'))
+	      // is is to avoid the case that output data size exceeds stdout limit
+              // and being segmented forcibly
+              bufs.push(buf);
+            });
+            // tokenizingProcess.stderr.on('data', (err) => {
+            //   console.log('WARNING [Tokenizer.tokenize]: ', err.toString());
+            // });
+            tokenizingProcess.on('exit', () => {
+              try {
+                // concatenate the buffers and try to parse it as a JSON string
+                const termFreqDict = JSON.parse(Buffer.concat(bufs).toString());
+                resolve(termFreqDict);
+                cb();
+              } catch (err) {
+                console.log('ERROR [Tokenizer.tokenize]: ', err);
+                console.log('ERROR [Tokenizer.tokenize]: data returned from tokenizing process: ', Buffer.concat(bufs).toString());
+                resolve({});
+                cb();
+              }
+            });
+          } catch (err) {
+            console.log('ERROR [Tokenizer.tokenize]: ', err);
+            resolve({});
+            cb();
+          }
+        },
+        failCallback: () => {
+          console.log('ERROR [Tokenizer.tokenize]: timeout during tokenization');
+          resolve({});
+        },
+      });
+    });
+  }
+  
+  
+  tokenizeFromServer(rawText) {
+    return new Promise((resolve) => {
+      this.taskManager.registerTask({
+        job: (cb) => {
+          try {
+            // strip strange characters and leading/lagging spaces;
+            // then convert to lower case and perform tokenization and stemming on it by calling
+            // "src/py/tokenize_and_stem.py"
+            const text = rawText
+              .replace(/|•|、/g, '').replace(/^ +| +$/g, '')
+              .toLowerCase();
+            const bufs = [];
+	        const tokenizingProcess = spawn('curl', ['http://localhost:4567/"'+text+'"']);
             tokenizingProcess.stdout.on('data', (buf) => {
               // push the received buffer to an array instead of parse it immediately.
               // thprint(tokenlize('apple'))

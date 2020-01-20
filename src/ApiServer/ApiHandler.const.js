@@ -26,7 +26,7 @@ const ApiHandler = [
           // tokenize terms from query and then match them with pages in the DB.
           // Return a list of related pages, sorted by correlation (from high to low)
           Tokenizer
-            .tokenize(query)
+            .tokenizeFromServer(query)
             .then((termFreqDict) => {
               // before using TermMatcher, save the searchterm into the DB.
               // DbInterface.updateSearchHistory(JSON.stringify(termFreqDict), query);
