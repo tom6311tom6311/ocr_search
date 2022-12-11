@@ -29,7 +29,7 @@
   "homepage": "https://github.com/tom6311tom6311/ocr_search#readme",
   "dependencies": {
     "dropbox": "^4.0.30",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "isomorphic-fetch": "^2.2.1",
     "mongodb": "^3.3.3",
     "office-to-pdf": "^4.0.0",
